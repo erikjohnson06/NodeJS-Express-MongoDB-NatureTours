@@ -1,21 +1,21 @@
-const fs = require('fs');
-
-const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
+//const fs = require('fs');
+const Tour = require('./../models/tourModel');
+//const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
 
 //Middleware to ensure a tour id is valid
 exports.checkId = (request, response, next, val) => {
 
     const id = parseInt(request.params.id);
-    const tour = tours.find(el => el.id === id);
+//    const tour = tours.find(el => el.id === id);
 
-    if (!tour) {
-        return response
-                .status(404)
-                .json({
-                    status: "error",
-                    message: "Invalid ID"
-                });
-    }
+//    if (!tour) {
+//        return response
+//                .status(404)
+//                .json({
+//                    status: "error",
+//                    message: "Invalid ID"
+//                });
+//    }
 
     next();
 };
@@ -45,10 +45,10 @@ exports.getAllTours = (request, response) => {
             .status(200)
             .json({
                 status: "success",
-                results: tours.length,
-                data: {
-                    tours: tours
-                }
+//                results: tours.length,
+//                data: {
+//                    tours: tours
+//                }
             });
 };
 
@@ -56,16 +56,16 @@ exports.getTourById = (request, response) => {
 
     //console.log(request.params);
     const id = parseInt(request.params.id);
-    const tour = tours.find(el => el.id === id);
+//    const tour = tours.find(el => el.id === id);
 
     response
             .status(200)
             .json({
                 status: "success",
                 message: "",
-                data: {
-                    tour: tour
-                }
+//                data: {
+//                    tour: tour
+//                }
             });
 };
 
@@ -73,26 +73,26 @@ exports.createTour = (request, response) => {
 
     console.log(request.body);
 
-    const newId = tours[tours.length - 1].id + 1;
-    const newTour = Object.assign({id: newId}, request.body);
-
-    tours.push(newTour);
-
-    fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err => {
-        response.status(201).json({
-            status: "success",
-            message: "",
-            data: {
-                tour: newTour
-            }
-        });
-    });
+//    const newId = tours[tours.length - 1].id + 1;
+//    const newTour = Object.assign({id: newId}, request.body);
+//
+//    tours.push(newTour);
+//
+//    fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err => {
+//        response.status(201).json({
+//            status: "success",
+//            message: "",
+//            data: {
+//                tour: newTour
+//            }
+//        });
+//    });
 };
 
 exports.updateTourById = (request, response) => {
 
     const id = parseInt(request.params.id);
-    const tour = tours.find(el => el.id === id);
+//    const tour = tours.find(el => el.id === id);
 
     response.status(200).json({
         status: 'success',
@@ -105,7 +105,7 @@ exports.updateTourById = (request, response) => {
 exports.deleteTourById = (request, response) => {
 
     const id = parseInt(request.params.id);
-    const tour = tours.find(el => el.id === id);
+//    const tour = tours.find(el => el.id === id);
 
     response.status(204).json({
         status: "success",
