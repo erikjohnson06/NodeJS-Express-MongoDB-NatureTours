@@ -89,7 +89,7 @@ exports.createTour = async (request, response) => {
 
     try {
 
-        console.log(request.body);
+        //console.log(request.body);
 
         //const tour = new Tour({});
         const tour = await Tour.create(request.body); //Returns Promise
@@ -135,12 +135,22 @@ exports.updateTourById = async (request, response) => {
     }
 };
 
-exports.deleteTourById = (request, response) => {
+exports.deleteTourById = async (request, response) => {
 
-    const id = parseInt(request.params.id);
+    try {
 
-    response.status(204).json({
-        status: "success",
-        data: null
-    });
+        await Tour.findByIdAndDelete(request.params.id, request.body);
+
+        response.status(204).json({
+            status: "success",
+            message: "Tour Deleted Successfully",
+            data: {}
+        });
+    } catch (e) {
+        response.status(400).json({
+            status: "error",
+            message: "An unexpected error has occurred",
+            error: e
+        });
+    }
 };

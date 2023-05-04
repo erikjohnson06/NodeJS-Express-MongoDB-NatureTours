@@ -10,8 +10,8 @@ console.log(db);
 console.log(process.env.DATABASE_LOCAL);
 
 mongoose
-        .connect(db) //Atlas DB
-        //.connect(process.env.DATABASE_LOCAL) //Local DB
+        //.connect(db) //Atlas DB
+        .connect(process.env.DATABASE_LOCAL) //Local DB
         .then(() => {
             console.log("DB Connection successful");
         }
