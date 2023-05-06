@@ -1,5 +1,6 @@
 //const fs = require('fs');
 const Tour = require('./../models/tourModel');
+const APIFeatures = require('./../utils/APIFeatures');
 //const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
 
 //Middleware to ensure a tour id is valid
@@ -37,11 +38,30 @@ exports.checkId = (request, response, next, val) => {
 //    next();
 //};
 
+//Middleware to account for 'top-5-bargain-tours' route alias
+exports.aliasTopBargainTours = (request, response, next) => {
+    request.query.limit = '5';
+    request.query.sort = '-ratingsAverage,price'; //Find highest-rated tours with lowest prices
+    request.query.fields = 'name,price,ratingsAverage,summary,difficulty';
+    next();
+};
+
+
 exports.getAllTours = async (request, response) => {
 
     try {
 
-        const tours = await Tour.find();
+        console.log("request.query:", request.query);
+
+        const features = (new APIFeatures(Tour.find(), request.query))
+                .filter()
+                .sort()
+                .selectFields()
+                .pagination();
+
+        const tours = await features.query;
+
+        //const tours = await Tour.find();
 
         response
                 .status(200)
@@ -115,8 +135,8 @@ exports.updateTourById = async (request, response) => {
     try {
 
         const tour = await Tour.findByIdAndUpdate(request.params.id, request.body, {
-            new: true, //return newly updated document
-            runValidators : true
+            new : true, //return newly updated document
+            runValidators: true
         });
 
         response.status(201).json({
@@ -145,6 +165,111 @@ exports.deleteTourById = async (request, response) => {
             status: "success",
             message: "Tour Deleted Successfully",
             data: {}
+        });
+    } catch (e) {
+        response.status(400).json({
+            status: "error",
+            message: "An unexpected error has occurred",
+            error: e
+        });
+    }
+};
+
+exports.getTourStats = async (request, response) => {
+
+    try {
+
+        const stats = await Tour.aggregate([
+            {
+                $match: {ratingsAverage: {$gte: 4.5}}
+            },
+            //Group matched result set
+            {
+                $group: {
+                    //_id : '$difficulty', //Field to group by
+                    //_id : '$ratingsAverage',
+                    _id: {$toUpper: '$difficulty'},
+                    toursCount: {$sum: 1}, //Adds 1 for each document
+                    ratingsCount: {$sum: '$ratingsQuantity'},
+                    averageRating: {$avg: '$ratingsAverage'},
+                    averagePrice: {$avg: '$price'},
+                    minPrice: {$min: '$price'},
+                    maxPrice: {$max: '$price'}
+                }
+            },
+            {
+                $sort: {averagePrice: 1} //1 = ASC
+            },
+            //Match result set again
+            //{
+            //    $match: {_id: {$ne: 'EASY'}}
+            //}
+        ]);
+
+        response.status(200).json({
+            status: "success",
+            message: "",
+            data: {
+                stats: stats
+            }
+        });
+    } catch (e) {
+        response.status(400).json({
+            status: "error",
+            message: "An unexpected error has occurred",
+            error: e
+        });
+    }
+};
+
+exports.getMonthlyPlan = async (request, response) => {
+
+    try {
+
+        const year = parseInt(request.params.year);
+
+
+        const plan = await Tour.aggregate([
+            {
+                $unwind: '$startDates'
+            },
+            {
+                $match: {startDates: {
+                        $gte: new Date(`${year}-01-01`),
+                        $lte: new Date(`${year}-12-31`)
+                    }}
+            },
+            {
+                $group: {
+                    _id: {$month: '$startDates'},
+                    toursCount: {$sum: 1}, //Count # of tours per month
+                    tours: {$push: '$name'}
+                }
+            },
+            {
+                $addFields: {
+                    month: '$_id' //Alias "montn" for _id field
+                }
+            },
+            {
+                $project: {
+                    _id: 0 //remove _id field from results
+                }
+            },
+            {
+                $sort: {toursCount: -1} //-1 = DESC
+            },
+            {
+                $limit: 12 //limit to 12 results
+            }
+        ]);
+
+        response.status(200).json({
+            status: "success",
+            message: "",
+            data: {
+                plan: plan
+            }
         });
     } catch (e) {
         response.status(400).json({

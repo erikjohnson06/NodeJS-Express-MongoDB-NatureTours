@@ -19,7 +19,7 @@ mongoose
 //console.log(process.env); //Node Environment variables
 
 //READ JSON FILE
-const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours-simple.json`, "utf-8"));
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, "utf-8"));
 
 //IMPORT DATA
 const importData = async ()=> {
@@ -30,6 +30,8 @@ const importData = async ()=> {
     catch(e){
         console.log(e);
     }
+
+    process.exit();
 };
 
 //DELETE ALL DATA
@@ -41,6 +43,8 @@ const deleteData = async ()=> {
     catch(e){
         console.log(e);
     }
+
+    process.exit();
 };
 
 if (process.argv[2] === '--import'){
@@ -53,3 +57,7 @@ else if (process.argv[2] === '--delete'){
 }
 
 console.log(process.argv[2]);
+
+//Usage:
+//node dev-data\data\import-dev-data.js --import
+//node dev-data\data\import-dev-data.js --delete
