@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const tourSchema = new mongoose.Schema({
     name: {
@@ -6,6 +7,10 @@ const tourSchema = new mongoose.Schema({
         required: [true, 'Tour must have a name'],
         unique: true,
         trim: true
+    },
+    slug: {
+        type: String,
+        default: ""
     },
     description: {
         type: String,
@@ -47,7 +52,7 @@ const tourSchema = new mongoose.Schema({
     },
     imageCover: {
         type: String,
-        required: [true, 'Tour must have a cover image']
+        required: [true, 'Cover image required for tour']
     },
     images: [String],
     createdAt: {
@@ -55,6 +60,42 @@ const tourSchema = new mongoose.Schema({
         default: Date.now()
     },
     startDates: [Date],
+    secretTour: {
+        type: Boolean,
+        default: false
+    }
+}, {
+    //Options
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true}
+});
+
+//Add virtual properties
+tourSchema.virtual('durationWeeks').get(function () {
+    return this.duration / 7;
+});
+
+//Document Middleware: runs before "save()" and "create()" commands
+tourSchema.pre('save', function (next) {
+    this.slug = slugify(this.name, {lower: true});
+    next();
+});
+
+//Document Middleware: runs after "save()" and "create()" commands
+tourSchema.post('save', function (doc, next) {
+    next();
+});
+
+//Query Middleware: runs before queries (any command that starts with "find"
+tourSchema.pre(/^find/, function (next) {
+    this.find({secretTour : { $ne: true }}); //Skip over any results are have secretTour set to true
+    this.startTime = Date.now();
+    next();
+});
+
+tourSchema.post(/^find/, function (docs, next) {
+    console.log("Query took " + (Date.now - this.start) + " milliseconds.");
+    next();
 });
 
 const Tour = mongoose.model('Tour', tourSchema);

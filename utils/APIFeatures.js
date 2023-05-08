@@ -1,16 +1,21 @@
 
 class APIFeatures {
 
+    /**
+     *
+     * @param {Object} query
+     * @param {Object} queryString
+     * @returns {nm$_APIFeatures.APIFeatures}
+     */
     constructor(query, queryString){
         this.query = query;
         this.queryString = queryString;
-        console.log(query, queryString);
     }
 
     /**
      * Filtering results
      *
-     * @returns {nm$_tourController.APIFeatures}
+     * @returns {nm$_APIFeatures.APIFeatures}
      */
     filter(){
 
@@ -34,7 +39,7 @@ class APIFeatures {
     /**
      * Sorting
      *
-     * @returns {nm$_tourController.APIFeatures}
+     * @returns {nm$_APIFeatures.APIFeatures}
      */
     sort(){
 
@@ -54,7 +59,7 @@ class APIFeatures {
     /**
      * Field limiting (projecting)
      *
-     * @returns {nm$_tourController.APIFeatures}
+     * @returns {nm$_APIFeatures.APIFeatures}
      */
     selectFields(){
 
@@ -74,7 +79,7 @@ class APIFeatures {
     /**
      * Pagination and limiting
      *
-     * @returns {nm$_tourController.APIFeatures}
+     * @returns {nm$_APIFeatures.APIFeatures}
      */
     pagination(){
 
