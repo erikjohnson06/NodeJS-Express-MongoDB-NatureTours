@@ -46,7 +46,6 @@ exports.aliasTopBargainTours = (request, response, next) => {
     next();
 };
 
-
 exports.getAllTours = async (request, response) => {
 
     try {
