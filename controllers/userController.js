@@ -7,15 +7,6 @@ exports.getAllUsers = (request, response) => {
                 message: "Route not yet defined"
             });
 
-//    response
-//            .status(200)
-//            .json({
-//                status: "success",
-//                results: tours.length,
-//                data: {
-//                    tours: tours
-//                }
-//            });
 };
 
 exports.createUser = (request, response) => {
