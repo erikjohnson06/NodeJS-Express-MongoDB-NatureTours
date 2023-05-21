@@ -26,7 +26,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Password is required'],
         maxlength: [50, 'Passwords are limited to 50 characters'],
-        minlength: [8, 'Passwords must be at least 8 characters']
+        minlength: [8, 'Passwords must be at least 8 characters'],
+        select: false //Prevents field from appearing in output
     },
     passwordConfirm: {
         type: String,
@@ -54,6 +55,17 @@ userSchema.pre('save', async function (next) {
     this.passwordConfirm = undefined; //Will cause the field not to persist in the database
     next();
 });
+
+/**
+ * Compare password input with encrypted user password.
+ *
+ * @param {string} input
+ * @param {string} userPassword
+ * @returns {Boolen}
+ */
+userSchema.methods.verifyPassword = async function(input, userPassword){
+    return await bcrypt.compare(input, userPassword);
+};
 
 /*
 {
