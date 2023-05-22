@@ -1,3 +1,4 @@
+const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('./../models/userModel');
 const catchAsyncErrors = require('./../utils/catchAsyncErrors');
@@ -20,7 +21,8 @@ exports.signup = catchAsyncErrors(async(request, response, next) => {
         name: request.body.name,
         email: request.body.email,
         password: request.body.password,
-        passwordConfirm: request.body.passwordConfirm
+        passwordConfirm: request.body.passwordConfirm,
+        passwordLastUpdated: request.body.passwordLastUpdated
     });
 
     const token = createToken(newUser._id);
@@ -39,14 +41,12 @@ exports.login = catchAsyncErrors(async(request, response, next) => {
 
     const { email, password } = request.body;
 
-
     if (!email || !password){
         return next(new AppError('Please provide email and password', 400));
     }
 
     //Verify email exists and password is correct
     const user = await User.findOne({ email: email }).select('+password'); //Passwords are not selected by default
-            //console.log(user);
 
     if (!user || !(await user.verifyPassword(password, user.password))){
         return next(new AppError('Incorrect email or password', 401));
@@ -60,4 +60,44 @@ exports.login = catchAsyncErrors(async(request, response, next) => {
         token,
         data: {}
     });
+});
+
+exports.protected = catchAsyncErrors(async(request, response, next) => {
+
+    let token;
+
+    //Check if token exists
+    if (request.headers.authorization && request.headers.authorization.startsWith('Bearer')){
+        token = request.headers.authorization.split(' ')[1];
+    }
+
+    console.log("token: ", token);
+
+    if (!token){
+        return next(new AppError('Please login to access this resource', 401));
+    }
+
+    //Validate token
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+    console.log("decoded: ", decoded);
+
+    //Ensure user associated with this token still exists (decoded.id = user.id)
+    const currentUser = await User.findById(decoded.id);
+
+    console.log("user: ", currentUser);
+
+    if (!currentUser){
+        return next(new AppError('Invalid token', 401));
+    }
+
+    //Ensure user password is still valid for this token
+    if (currentUser.changedPasswordAfter(decoded.iat)){
+        return next(new AppError('Invalid token.', 401));
+    }
+
+    //Proceed to protected route
+    request.user = currentUser;
+
+    next();
 });

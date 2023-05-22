@@ -59,6 +59,14 @@ const handleMongooseValidationError = error => {
     return new AppError(message, 400);
 };
 
+const handleJWTError = () => {
+    return new AppError("Invalid Token. Please login again.", 401);
+};
+
+const handleJWTExpiredError = () => {
+    return new AppError("Token has expired. Please login again.", 401);
+};
+
 module.exports = (error, request, response, next) => {
 
     //console.log(error.stack);
@@ -83,6 +91,12 @@ module.exports = (error, request, response, next) => {
         }
         if (error.name === 'ValidationError'){
             err = handleMongooseValidationError(err);
+        }
+        if (error.name === 'JsonWebTokenError'){
+            err = handleJWTError(err);
+        }
+        if (error.name === 'TokenExpiredError'){
+            err = handleJWTExpiredError(err);
         }
 
         sendErrorProd(err, response);

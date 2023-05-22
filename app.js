@@ -20,6 +20,8 @@ app.use(express.static(`${__dirname}/public`));
 
 app.use((request, response, next) => {
     request.requestTime = new Date().toISOString();
+    //console.log(request.headers);
+
     next();
 });
 

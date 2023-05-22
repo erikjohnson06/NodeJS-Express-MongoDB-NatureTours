@@ -39,11 +39,16 @@ const userSchema = new mongoose.Schema({
             },
             message: "Passwords must match"
         }
+    },
+    passwordLastUpdated: {
+        type: Date
     }
 });
 
-//Middleware: runs before "save()" and "create()" commands
-//Encrypt passwords with bcrypt hashing algorithm
+/**
+ * Encrypt passwords with bcrypt hashing algorithm
+ * Note: runs before "save()" and "create()" commands
+ */
 userSchema.pre('save', async function (next) {
 
     //Only necessary if password was modified
@@ -61,11 +66,29 @@ userSchema.pre('save', async function (next) {
  *
  * @param {string} input
  * @param {string} userPassword
- * @returns {Boolen}
+ * @returns {Boolean}
  */
 userSchema.methods.verifyPassword = async function(input, userPassword){
     return await bcrypt.compare(input, userPassword);
 };
+
+/**
+ * Compare lest password change date time
+ * @param {int} JWTTimestamp
+ * @returns {Boolean}
+ */
+userSchema.methods.changedPasswordAfter = function(JWTTimestamp){
+
+    console.log(this.passwordLastUpdated, JWTTimestamp);
+
+    if (this.passwordLastUpdated){
+        const timestamp = parseInt(this.passwordLastUpdated.getTime() / 1000, 10);
+        return JWTTimestamp < timestamp; //100 < 200
+    }
+
+    return false;
+};
+
 
 /*
 {
