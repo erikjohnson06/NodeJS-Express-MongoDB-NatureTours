@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -16,6 +17,11 @@ const userSchema = new mongoose.Schema({
         lowercase: true,
         maxlength: [250, 'Email addresses are limited to 250 characters'],
         validate: [validator.isEmail, 'Invalid email address']
+    },
+    role: {
+        type: String,
+        enum: ['user', 'guide', 'lead-guide', 'admin'],
+        default: 'user'
     },
     image: {
         type: String,
@@ -41,6 +47,12 @@ const userSchema = new mongoose.Schema({
         }
     },
     passwordLastUpdated: {
+        type: Date
+    },
+    passwordResetToken: {
+        type: String
+    },
+    passwordResetExpires: {
         type: Date
     }
 });
@@ -89,14 +101,27 @@ userSchema.methods.changedPasswordAfter = function(JWTTimestamp){
     return false;
 };
 
-
-/*
-{
-    //Options
-    toJSON: {virtuals: true},
-    toObject: {virtuals: true}
-}
+/**
+ *
+ * @returns {String}
  */
+userSchema.methods.createPasswordResetToken = function(){
+
+    let token = crypto.randomBytes(32).toString('hex');
+
+    this.passwordResetToken = crypto
+            .createHash('sha256')
+            .update(token)
+            .digest('hex');
+
+    console.log({token}, this.passwordResetToken);
+
+
+    this.passwordResetExpires = Date.now() + (1 * 60 * 1000); //Set to expire in 10 minutes
+
+    return token;
+};
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;

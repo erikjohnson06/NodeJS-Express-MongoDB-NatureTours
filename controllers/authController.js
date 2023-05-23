@@ -101,3 +101,38 @@ exports.protected = catchAsyncErrors(async(request, response, next) => {
 
     next();
 });
+
+exports.restrictTo = (...roles) => {
+    return (request, response, next) => {
+
+        //roles: ['admin', 'user']
+        if (!roles.includes(request.user.role)){
+            return next(new AppError('Insufficient permission to perform this action.', 403));
+        }
+
+        next();
+    };
+};
+
+exports.forgotPassword = catchAsyncErrors(async(request, response, next) => {
+
+    //Get user based on email
+    const user = await User.findOne({ email: request.body.email });
+
+    if (!user){
+        return next(new AppError('User does not exist', 404));
+    }
+
+    //Generate random token to reset password
+    let token = user.createPasswordResetToken();
+
+    await user.save();
+
+
+    //Send to user via email
+
+});
+
+exports.resetPassword = catchAsyncErrors(async(request, response, next) => {
+
+});
