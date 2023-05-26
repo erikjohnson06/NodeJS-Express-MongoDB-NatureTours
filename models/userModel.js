@@ -28,6 +28,11 @@ const userSchema = new mongoose.Schema({
         default: "",
         maxlength: [250, 'Image names are limited to 250 characters']
     },
+    active: {
+        type: Boolean,
+        default: true,
+        select: false
+    },
     password: {
         type: String,
         required: [true, 'Password is required'],
@@ -72,6 +77,30 @@ userSchema.pre('save', async function (next) {
     this.passwordConfirm = undefined; //Will cause the field not to persist in the database
     next();
 });
+
+/**
+ * Update password last updated timestamp on save/create events
+ */
+userSchema.pre('save', async function (next) {
+
+    //Only necessary if password was modified or if user is being newly created
+    if (!this.isModified('password') || this.isNew){
+        return next();
+    }
+
+    this.passwordLastUpdated = Date.now() - 1000; //Ensure that token is created after timestamp here
+    next();
+});
+
+/**
+ * Limit all queries to active users only
+ */
+userSchema.pre('/^find/', async function (next) {
+
+    this.find({active: { $ne : false }});
+    next();
+});
+
 
 /**
  * Compare password input with encrypted user password.
