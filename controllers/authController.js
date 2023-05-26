@@ -33,6 +33,23 @@ const createAndSendToken = (user, message, statusCode, response) => {
 
     const token = createToken(user._id);
 
+    const cookieOptions = {
+        expires: new Date(Date.now() + (process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000)), //Set expiration to 90 days
+        httpOnly: true
+    };
+
+    //Secure property will only work using HTTPS protocol. Ignore if not in production.
+    if (process.env.NODE_ENV === 'production') {
+        cookieOptions.secure = true;
+    }
+
+    response.cookie('jwt', token, cookieOptions);
+
+    //Unset the password in the response object
+    if (user.password){
+        user.password = undefined;
+    }
+
     response.status(statusCode).json({
         status: 'success',
         message: message,
