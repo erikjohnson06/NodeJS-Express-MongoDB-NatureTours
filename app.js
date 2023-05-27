@@ -4,10 +4,12 @@ const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
 const helmet = require('helmet');
+const hpp = require('hpp');
 const morgan = require('morgan'); //HTTP Request logging package
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 const AppError = require('./utils/appError');
 const errorHandler = require('./controllers/errorController');
 
@@ -21,7 +23,7 @@ if (process.env.NODE_ENV === 'development') {
 //GLOBAL MIDDLEWARE
 
 //Helmet - Set security HTTP headers
-app.user(helmet());
+app.use(helmet());
 
 //Rate Limiting: allow up to 300 requests from the same IP in one hour
 const limiter = rateLimit({
@@ -43,6 +45,19 @@ app.use(mongoSanitize());
 //Data sanitization against XSS
 app.use(xssClean());
 
+//Prevent parament "pollution". Whitelist = allowed query fields
+app.use(hpp({
+    whitelist: [
+        'duration',
+        'sort',
+        'ratingsAverage',
+        'ratingsQuantity',
+        'difficulty',
+        'maxGroupSize',
+        'price'
+    ]
+}));
+
 //Serve static files
 app.use(express.static(`${__dirname}/public`));
 
@@ -57,6 +72,7 @@ app.use((request, response, next) => {
 //ROUTES
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 //ROUTE ERROR HANDLER
 app.all('*', (request, response, next) => {

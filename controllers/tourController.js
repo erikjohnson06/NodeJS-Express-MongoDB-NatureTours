@@ -71,7 +71,7 @@ exports.getAllTours = catchAsyncErrors(async (request, response, next) => {
 
 exports.getTourById = catchAsyncErrors(async (request, response, next) => {
 
-    const tour = await Tour.findById(request.params.id);
+    const tour = await Tour.findById(request.params.id).populate('reviews');
     //const tour = await Tour.findOne({_id: request.params.id }); //Alternative method
 
     if (!tour) {

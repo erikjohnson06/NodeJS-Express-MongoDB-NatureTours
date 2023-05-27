@@ -24,4 +24,5 @@ router
     .patch(userController.updateUserById)
     .delete(userController.deleteUserById);
 
+
 module.exports = router;
