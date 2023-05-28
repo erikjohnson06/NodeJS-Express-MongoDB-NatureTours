@@ -3,6 +3,7 @@ const Tour = require('./../models/tourModel');
 const APIFeatures = require('./../utils/APIFeatures');
 const catchAsyncErrors = require('./../utils/catchAsyncErrors');
 const AppError = require('./../utils/appError');
+const handlerFactory = require('./handlerFactory');
 //const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
 
 //Middleware to ensure a tour id is valid
@@ -130,20 +131,22 @@ exports.updateTourById = catchAsyncErrors(async (request, response, next) => {
     });
 });
 
-exports.deleteTourById = catchAsyncErrors(async (request, response, next) => {
+exports.deleteTourById = handlerFactory.deleteOne(Tour);
 
-    const tour = await Tour.findByIdAndDelete(request.params.id, request.body);
-
-    if (!tour) {
-        return next(new AppError(`No tour found with id: ${request.params.id}`, 404));
-    }
-
-    response.status(204).json({
-        status: "success",
-        message: "Tour Deleted Successfully",
-        data: {}
-    });
-});
+//exports.deleteTourById = catchAsyncErrors(async (request, response, next) => {
+//
+//    const tour = await Tour.findByIdAndDelete(request.params.id, request.body);
+//
+//    if (!tour) {
+//        return next(new AppError(`No tour found with id: ${request.params.id}`, 404));
+//    }
+//
+//    response.status(204).json({
+//        status: "success",
+//        message: "Tour Deleted Successfully",
+//        data: {}
+//    });
+//});
 
 exports.getTourStats = catchAsyncErrors(async (request, response, next) => {
 

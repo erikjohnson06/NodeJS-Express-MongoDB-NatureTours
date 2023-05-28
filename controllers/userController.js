@@ -1,6 +1,7 @@
 const User = require('./../models/userModel');
 const catchAsyncErrors = require('./../utils/catchAsyncErrors');
 const AppError = require('./../utils/appError');
+const handlerFactory = require('./handlerFactory');
 
 /**
  *
@@ -107,12 +108,14 @@ exports.updateUserById = (request, response) => {
             });
 };
 
-exports.deleteUserById = (request, response) => {
+//exports.deleteUserById = (request, response) => {
+//
+//    response
+//            .status(500)
+//            .json({
+//                status: "error",
+//                message: "Route not yet defined"
+//            });
+//};
 
-    response
-            .status(500)
-            .json({
-                status: "error",
-                message: "Route not yet defined"
-            });
-};
+exports.deleteUserById = handlerFactory.deleteOne(User);
