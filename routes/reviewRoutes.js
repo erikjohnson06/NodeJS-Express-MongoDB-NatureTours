@@ -9,9 +9,16 @@ const router = express.Router({
 
 router.route('/')
         .get(reviewController.getAllReviews)
-        .post(authController.protected, authController.restrictTo('user'), reviewController.createReview);
+        .post(
+                authController.protected,
+                authController.restrictTo('user'),
+                reviewController.setTourAndUserIds,
+                reviewController.createReview
+                );
 
 router.route('/:id')
+        .get(reviewController.getReviewById)
+        .patch(reviewController.updateReviewById)
         .delete(
                 authController.protected,
                 authController.restrictTo('admin'),
