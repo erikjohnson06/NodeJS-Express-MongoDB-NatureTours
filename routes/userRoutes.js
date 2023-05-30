@@ -5,14 +5,19 @@ const router = express.Router();
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
-
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
-router.patch('/updatePassword', authController.protected, authController.updatePassword);
 
-router.get('/me', authController.protected, userController.getCurrentUser, userController.getUserById);
-router.patch('/updateCurrentUserData', authController.protected, userController.updateCurrentUserData);
-router.delete('/deleteCurrentUser', authController.protected, userController.deleteCurrentUser);
+//Require authentication for the routes below
+router.use(authController.protected);
+
+router.patch('/updatePassword', authController.updatePassword);
+router.get('/me', userController.getCurrentUser, userController.getUserById);
+router.patch('/updateCurrentUserData', userController.updateCurrentUserData);
+router.delete('/deleteCurrentUser', userController.deleteCurrentUser);
+
+//Require admin roles for the routes below
+router.use(authController.restrictTo('admin'));
 
 router
     .route('/')

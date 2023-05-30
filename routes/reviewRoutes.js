@@ -6,23 +6,25 @@ const router = express.Router({
     mergeParams: true //Allows access to parameters from tour routers
 });
 
+//Require authentication for the routes below
+router.use(authController.protected);
 
 router.route('/')
         .get(reviewController.getAllReviews)
         .post(
-                authController.protected,
-                authController.restrictTo('user'),
-                reviewController.setTourAndUserIds,
-                reviewController.createReview
-                );
+            authController.restrictTo('user'),
+            reviewController.setTourAndUserIds,
+            reviewController.createReview
+        );
 
 router.route('/:id')
         .get(reviewController.getReviewById)
-        .patch(reviewController.updateReviewById)
+        .patch(
+            authController.restrictTo('user', 'admin'),
+            reviewController.updateReviewById)
         .delete(
-                authController.protected,
-                authController.restrictTo('admin'),
-                reviewController.deleteReviewById
-                );
+            authController.restrictTo('user', 'admin'),
+            reviewController.deleteReviewById
+        );
 
 module.exports = router;
