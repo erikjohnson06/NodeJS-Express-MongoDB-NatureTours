@@ -100,7 +100,7 @@ exports.getAllDocuments = Model =>
                 .selectFields()
                 .pagination();
 
-        const data = await features.query.explain;
+        const data = await features.query;
 
         response
                 .status(200)

@@ -130,11 +130,14 @@ const tourSchema = new mongoose.Schema(
     }
 );
 
-//Include index on the price field (1 = ASC, -1 = DESC)
+//Include index on the price and ratings fields (1 = ASC, -1 = DESC)
 tourSchema.index({
     price: 1,
     ratingsAverage: -1
 });
+
+//Index the 'slug' field
+tourSchema.index({ slug: 1 });
 
 //Add virtual properties
 tourSchema.virtual('durationWeeks').get(function () {
