@@ -10,3 +10,7 @@ Mongo DB Atlas or Local
 NodeMailer
 
 Express middleware:  (express-rate-limit, helmet, express-mongo-sanitize, )
+
+MVC design
+
+PUG templating

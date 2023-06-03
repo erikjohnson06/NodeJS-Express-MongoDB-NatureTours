@@ -1,4 +1,5 @@
-const fs = require('fs');
+//const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -14,6 +15,13 @@ const AppError = require('./utils/appError');
 const errorHandler = require('./controllers/errorController');
 
 const app = express();
+
+//Set template engine / views folder location
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
+//Define static assets in piblic folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 //Log in development mode
 if (process.env.NODE_ENV === 'development') {
@@ -58,9 +66,6 @@ app.use(hpp({
     ]
 }));
 
-//Serve static files
-app.use(express.static(`${__dirname}/public`));
-
 //Test middleware
 app.use((request, response, next) => {
     request.requestTime = new Date().toISOString();
@@ -70,6 +75,13 @@ app.use((request, response, next) => {
 });
 
 //ROUTES
+app.get('/', (request, response) => {
+    response.status(200).render('base', {
+        tour: 'The Forest Hiker',
+        user: 'Erik'
+    });
+});
+
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);

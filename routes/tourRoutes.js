@@ -19,6 +19,12 @@ router.route('/monthly-plan/:year')
                 tourController.getMonthlyPlan
                 );
 
+router.route('/tours-within/:distance/center/:latlong/unit/:unit')
+        .get(tourController.getToursWithinDistance);
+
+router.route('/calculate-distances/:latlong/unit/:unit')
+        .get(tourController.getDistanceToTourStartingPoints);
+
 router.route('/')
         .get(tourController.getAllTours) //
         .post(

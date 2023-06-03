@@ -1,7 +1,7 @@
 //const fs = require('fs');
 const Tour = require('./../models/tourModel');
 const catchAsyncErrors = require('./../utils/catchAsyncErrors');
-//const AppError = require('./../utils/appError');
+const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
 //const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
 
@@ -134,8 +134,83 @@ exports.getMonthlyPlan = catchAsyncErrors(async (request, response, next) => {
     });
 });
 
+/**
+ * Ex: tours-within/:distance/center/:latlong/unit/:unit
+ *     tours-within/250/center/34.111745,-118.113491/unit/mi
+ */
+exports.getToursWithinDistance = catchAsyncErrors(async (request, response, next) => {
+
+    const {distance, latlong, unit} = request.params;
+    const [lat, long] = latlong.split(',');
+
+    const earthRadius = (unit === "mi" ? 3963.2 : 6378.1); //Miles or Kilometers
+    const radius = distance / earthRadius;
+
+    if (!lat || !long) {
+        next(new AppError('Unable to resolve lat/long coordinates. Required format: lat,long', 400));
+    }
+
+    console.log(distance, latlong, lat, long, unit);
+
+    const tours = await Tour.find({
+        startLocation: {$geoWithin: {$centerSphere: [[long, lat], radius]}}
+    });
+
+    response.status(200).json({
+        status: "success",
+        message: "",
+        results: tours.length,
+        data: {
+            tours: tours
+        }
+    });
+});
+
+/**
+ * Calculate the distances to all tours from a given starting lat/long coordinate
+ */
+exports.getDistanceToTourStartingPoints = catchAsyncErrors(async (request, response, next) => {
+
+    const {latlong, unit} = request.params;
+    const [lat, long] = latlong.split(',');
+
+    const multiplier = (unit === "mi" ? 0.000621371 : 0.001); //Miles or Kilometers
+
+    if (!lat || !long) {
+        next(new AppError('Unable to resolve lat/long coordinates. Required format: lat,long', 400));
+    }
+
+    const distances = await Tour.aggregate([
+        {
+            $geoNear: {
+                near: {
+                    type: 'Point',
+                    coordinates: [long * 1, lat * 1]
+                },
+                distanceField: 'distance',
+                distanceMultiplier: multiplier
+            }
+        },
+        {
+            $project: {
+                distance: 1,
+                name: 1
+            }
+        }
+
+    ]);
+
+    response.status(200).json({
+        status: "success",
+        message: "",
+        data: {
+            distances: distances
+        }
+    });
+});
+
 exports.getAllTours = factory.getAllDocuments(Tour);
-exports.getTourById = factory.getDocument(Tour, { path: 'reviews'});
+exports.getTourById = factory.getDocument(Tour, {path: 'reviews'});
 exports.createTour = factory.createDocument(Tour);
 exports.updateTourById = factory.updateDocument(Tour);
 exports.deleteTourById = factory.deleteDocument(Tour);
