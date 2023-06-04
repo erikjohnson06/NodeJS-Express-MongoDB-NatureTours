@@ -11,6 +11,7 @@ const morgan = require('morgan'); //HTTP Request logging package
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const viewRouter = require('./routes/viewRoutes');
 const AppError = require('./utils/appError');
 const errorHandler = require('./controllers/errorController');
 
@@ -75,13 +76,7 @@ app.use((request, response, next) => {
 });
 
 //ROUTES
-app.get('/', (request, response) => {
-    response.status(200).render('base', {
-        tour: 'The Forest Hiker',
-        user: 'Erik'
-    });
-});
-
+app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);

@@ -7,10 +7,14 @@ Development/Production mode
 
 Mongo DB Atlas or Local
 
-NodeMailer
+NodeMailer, SendGrid
+
+Multer
 
 Express middleware:  (express-rate-limit, helmet, express-mongo-sanitize, )
 
 MVC design
 
 PUG templating
+
+Stripe payments

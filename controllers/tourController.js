@@ -150,7 +150,7 @@ exports.getToursWithinDistance = catchAsyncErrors(async (request, response, next
         next(new AppError('Unable to resolve lat/long coordinates. Required format: lat,long', 400));
     }
 
-    console.log(distance, latlong, lat, long, unit);
+    //console.log(distance, latlong, lat, long, unit);
 
     const tours = await Tour.find({
         startLocation: {$geoWithin: {$centerSphere: [[long, lat], radius]}}
