@@ -16,7 +16,7 @@ exports.getOverview = catchAsyncErrors(async (request, response, next) => {
 });
 
 exports.getTourDetail = catchAsyncErrors(async (request, response, next) => {
-    
+
     const tour = await Tour.findOne({
         slug: request.params.slug
     }).populate({
@@ -24,8 +24,14 @@ exports.getTourDetail = catchAsyncErrors(async (request, response, next) => {
         fields: 'review rating user'
     });
 
-    response.status(200).render('tour', {
-        title: tour.name,
-        tour: tour
-    });
+    response
+        .status(200)
+        .set(
+                'Content-Security-Policy',
+                'connect-src https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com'
+                )
+        .render('tour', {
+            title: tour.name,
+            tour: tour
+        });
 });
