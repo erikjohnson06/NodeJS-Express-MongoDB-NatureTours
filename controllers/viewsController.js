@@ -35,3 +35,11 @@ exports.getTourDetail = catchAsyncErrors(async (request, response, next) => {
             tour: tour
         });
 });
+
+exports.getLoginForm = (request, response) => {
+    response
+        .status(200)
+        .render('login', {
+            title: 'Login to Your Account'
+        });
+};
