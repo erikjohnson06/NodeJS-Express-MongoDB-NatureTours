@@ -82,8 +82,12 @@ exports.login = catchAsyncErrors(async(request, response, next) => {
         return next(new AppError('Please provide email and password', 400));
     }
 
+    console.log(email, password);
+
     //Verify email exists and password is correct
     const user = await User.findOne({email: email}).select('+password'); //Passwords are not selected by default
+
+    console.log(user);
 
     if (!user || !(await user.verifyPassword(password, user.password))) {
         return next(new AppError('Incorrect email or password', 401));

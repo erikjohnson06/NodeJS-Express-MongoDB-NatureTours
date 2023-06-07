@@ -26,10 +26,10 @@ exports.getTourDetail = catchAsyncErrors(async (request, response, next) => {
 
     response
         .status(200)
-        .set(
-                'Content-Security-Policy',
-                'connect-src https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com'
-                )
+//        .set(
+//            'Content-Security-Policy',
+//            'connect-src https://*.tiles.mapbox.com https://api.mapbox.com https://events.mapbox.com'
+//        )
         .render('tour', {
             title: tour.name,
             tour: tour
@@ -39,6 +39,10 @@ exports.getTourDetail = catchAsyncErrors(async (request, response, next) => {
 exports.getLoginForm = (request, response) => {
     response
         .status(200)
+//        .set(
+//            'Content-Security-Policy',
+//            'connect-src https://cdnjs.cloudflare.com'
+//        )
         .render('login', {
             title: 'Login to Your Account'
         });

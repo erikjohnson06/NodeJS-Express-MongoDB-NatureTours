@@ -32,7 +32,15 @@ if (process.env.NODE_ENV === 'development') {
 //GLOBAL MIDDLEWARE
 
 //Helmet - Set security HTTP headers
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            "connect-src" : ["'self'",  "localhost", "localhost:3000"],
+            "script-src": ["'self'", "localhost", "https://cdnjs.cloudflare.com", "https://*.tiles.mapbox.com", "https://api.mapbox.com", "https://events.mapbox.com"],
+            "style-src": ["'self'", "https://fonts.googleapis.com"]
+        }
+    }
+}));
 
 //Rate Limiting: allow up to 300 requests from the same IP in one hour
 const limiter = rateLimit({
