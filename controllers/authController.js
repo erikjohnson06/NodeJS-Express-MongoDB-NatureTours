@@ -82,12 +82,8 @@ exports.login = catchAsyncErrors(async(request, response, next) => {
         return next(new AppError('Please provide email and password', 400));
     }
 
-    console.log(email, password);
-
     //Verify email exists and password is correct
     const user = await User.findOne({email: email}).select('+password'); //Passwords are not selected by default
-
-    console.log(user);
 
     if (!user || !(await user.verifyPassword(password, user.password))) {
         return next(new AppError('Incorrect email or password', 401));
@@ -104,6 +100,9 @@ exports.protected = catchAsyncErrors(async(request, response, next) => {
     //Check if token exists
     if (request.headers.authorization && request.headers.authorization.startsWith('Bearer')) {
         token = request.headers.authorization.split(' ')[1];
+    }
+    else if (request.cookies.jwt){
+        token = request.cookies.jwt;
     }
 
     //console.log("token: ", token);
@@ -133,6 +132,40 @@ exports.protected = catchAsyncErrors(async(request, response, next) => {
 
     //Proceed to protected route
     request.user = currentUser;
+
+    next();
+});
+
+/**
+ * Determine whether user is logged in. Rendered pages only.
+ */
+exports.isLoggedIn = catchAsyncErrors(async(request, response, next) => {
+
+    //Check if token exists
+    if (request.cookies.jwt){
+
+        //Validate token
+        const decoded = await promisify(jwt.verify)(request.cookies.jwt, process.env.JWT_SECRET);
+
+        //console.log("decoded: ", decoded);
+
+        //Ensure user associated with this token still exists (decoded.id = user.id)
+        const currentUser = await User.findById(decoded.id);
+
+        //console.log("user: ", currentUser);
+
+        if (!currentUser) {
+            return next();
+        }
+
+        //Ensure user password is still valid for this token
+        if (currentUser.changedPasswordAfter(decoded.iat)) {
+            return next();
+        }
+
+        //Proceed to protected route
+        response.locals.user = currentUser;
+    }
 
     next();
 });

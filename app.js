@@ -7,6 +7,7 @@ const xssClean = require('xss-clean');
 const helmet = require('helmet');
 const hpp = require('hpp');
 const morgan = require('morgan'); //HTTP Request logging package
+const cookieParser = require('cookie-parser');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -35,9 +36,12 @@ if (process.env.NODE_ENV === 'development') {
 app.use(helmet({
     contentSecurityPolicy: {
         directives: {
-            "connect-src" : ["'self'",  "localhost", "localhost:3000"],
-            "script-src": ["'self'", "localhost", "https://cdnjs.cloudflare.com", "https://*.tiles.mapbox.com", "https://api.mapbox.com", "https://events.mapbox.com"],
-            "style-src": ["'self'", "https://fonts.googleapis.com"]
+            "default-src" : ["'self'", "blob:", "localhost:3000"],
+            "connect-src" : ["'self'", "localhost:3000", "https://api.mapbox.com/", "https://events.mapbox.com/"],
+            "worker-src" : ["'self'", "blob:"],
+            "script-src": ["'self'", "blob:", "localhost:3000", "https://cdnjs.cloudflare.com/", "https://*.tiles.mapbox.com/", "https://api.mapbox.com/", "https://events.mapbox.com/"],
+            "style-src": ["'self'", "https://fonts.googleapis.com/", "https://api.mapbox.com/", "https://*.tiles.mapbox.com/", "'unsafe-inline'"],
+            "font-src": ["'self'", "https://fonts.googleapis.com/", "https://fonts.gstatic.com/"]
         }
     }
 }));
@@ -55,6 +59,8 @@ app.use('/api', limiter);
 app.use(express.json({
     limit: '10kb' //Limit body size to 10 kb
 }));
+
+app.use(cookieParser());
 
 //Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
@@ -78,7 +84,7 @@ app.use(hpp({
 //Test middleware
 app.use((request, response, next) => {
     request.requestTime = new Date().toISOString();
-    //console.log(request.headers);
+    console.log(request.cookies);
 
     next();
 });

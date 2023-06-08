@@ -1,14 +1,9 @@
 const express = require('express');
 const viewsController = require('./../controllers/viewsController');
+const authController = require('./../controllers/authController');
 const router = express.Router();
 
-//router.get('/', (request, response) => {
-//    response.status(200).render('base', {
-//        title: 'Adventures at the Next Level',
-//        tour: 'The Forest Hiker',
-//        user: 'Erik'
-//    });
-//});
+router.use(authController.isLoggedIn);
 
 router.get('/', viewsController.getOverview);
 router.get('/tour/:slug', viewsController.getTourDetail);
