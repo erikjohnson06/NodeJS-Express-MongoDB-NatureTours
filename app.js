@@ -36,8 +36,8 @@ if (process.env.NODE_ENV === 'development') {
 app.use(helmet({
     contentSecurityPolicy: {
         directives: {
-            "default-src" : ["'self'", "blob:", "localhost:3000"],
-            "connect-src" : ["'self'", "localhost:3000", "https://api.mapbox.com/", "https://events.mapbox.com/"],
+            "default-src" : ["'self'", "blob:", "localhost:3000", "ws:"],
+            "connect-src" : ["'self'", "localhost:3000", "ws://localhost:*/",  "https://api.mapbox.com/", "https://events.mapbox.com/"],
             "worker-src" : ["'self'", "blob:"],
             "script-src": ["'self'", "blob:", "localhost:3000", "https://cdnjs.cloudflare.com/", "https://*.tiles.mapbox.com/", "https://api.mapbox.com/", "https://events.mapbox.com/"],
             "style-src": ["'self'", "https://fonts.googleapis.com/", "https://api.mapbox.com/", "https://*.tiles.mapbox.com/", "'unsafe-inline'"],
@@ -59,6 +59,9 @@ app.use('/api', limiter);
 app.use(express.json({
     limit: '10kb' //Limit body size to 10 kb
 }));
+
+//Parse data from URL encoded form
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
 app.use(cookieParser());
 

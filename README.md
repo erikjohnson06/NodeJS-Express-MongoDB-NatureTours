@@ -11,6 +11,8 @@ NodeMailer, SendGrid
 
 axios js
 
+Parcel JS = JS compiler and bundler
+
 Multer
 
 Express middleware:  (express-rate-limit, helmet, express-mongo-sanitize, )

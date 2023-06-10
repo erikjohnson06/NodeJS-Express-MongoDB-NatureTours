@@ -6,11 +6,15 @@
   "scripts": {
     "start:dev": "nodemon server.js",
     "start:prod": "SET NODE_ENV=production&&nodemon server.js",
-    "debug": "ndb server.js"
+    "debug": "ndb server.js",
+    "watch:js": "parcel watch --no-hmr ./public/js/index.js --out-dir ./public/js --out-file bundle.js --public-url ./",
+    "watch:js": "parcel watch --no-hmr ./public/js/index.js --out-dir ./public/js --out-file bundle.js --public-url ./"
   },
   "author": "Erik Johnson",
   "license": "ISC",
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
+    "axios": "^1.4.0",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
@@ -30,7 +34,8 @@
   },
   "devDependencies": {
     "ndb": "^1.1.5",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "parcel-bundler": "^1.12.5"
   },
   "engines": {
     "node": ">=10.0.0"

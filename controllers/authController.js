@@ -93,6 +93,18 @@ exports.login = catchAsyncErrors(async(request, response, next) => {
     createAndSendToken(user, "User Signed In Successfully", 200, response);
 });
 
+exports.logout = catchAsyncErrors(async(request, response, next) => {
+
+    response.cookie('jwt', 'logged_out', {
+        expires: new Date(Date.now() + (10 * 1000)),
+        httpOnly: true
+    });
+
+    response.status(200).json({
+        status: 'success'
+    });
+});
+
 exports.protected = catchAsyncErrors(async(request, response, next) => {
 
     let token;
@@ -132,43 +144,50 @@ exports.protected = catchAsyncErrors(async(request, response, next) => {
 
     //Proceed to protected route
     request.user = currentUser;
-
+    response.locals.user = currentUser;
     next();
 });
 
 /**
  * Determine whether user is logged in. Rendered pages only.
  */
-exports.isLoggedIn = catchAsyncErrors(async(request, response, next) => {
+exports.isLoggedIn = async(request, response, next) => {
 
     //Check if token exists
     if (request.cookies.jwt){
 
-        //Validate token
-        const decoded = await promisify(jwt.verify)(request.cookies.jwt, process.env.JWT_SECRET);
+        try {
 
-        //console.log("decoded: ", decoded);
+            //Validate token
+            const decoded = await promisify(jwt.verify)(request.cookies.jwt, process.env.JWT_SECRET);
 
-        //Ensure user associated with this token still exists (decoded.id = user.id)
-        const currentUser = await User.findById(decoded.id);
+            //console.log("decoded: ", decoded);
 
-        //console.log("user: ", currentUser);
+            //Ensure user associated with this token still exists (decoded.id = user.id)
+            const currentUser = await User.findById(decoded.id);
 
-        if (!currentUser) {
+            //console.log("user: ", currentUser);
+
+            if (!currentUser) {
+                return next();
+            }
+
+            //Ensure user password is still valid for this token
+            if (currentUser.changedPasswordAfter(decoded.iat)) {
+                return next();
+            }
+
+            //Proceed to protected route
+            response.locals.user = currentUser;
             return next();
         }
-
-        //Ensure user password is still valid for this token
-        if (currentUser.changedPasswordAfter(decoded.iat)) {
+        catch (e){
             return next();
         }
-
-        //Proceed to protected route
-        response.locals.user = currentUser;
     }
 
     next();
-});
+};
 
 exports.restrictTo = (...roles) => {
 

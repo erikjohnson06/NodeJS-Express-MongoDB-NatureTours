@@ -1,34 +1,62 @@
 const AppError = require('./../utils/appError');
 
-const sendErrorDev = (error, response) => {
-    response.status(error.statusCode).json({
-        status: error.status,
-        message: error.message,
-        stack: error.stack,
-        error: error
+const sendErrorDev = (error, request, response) => {
+
+    console.error('Error', error);
+
+    //API Error Handler
+    if (request.originalUrl.startsWith('/api')){
+        return response.status(error.statusCode).json({
+            status: error.status,
+            message: error.message,
+            stack: error.stack,
+            error: error
+        });
+    }
+
+    //Rendered Site Error Handle
+    return response.status(error.statusCode).render('error', {
+        title: 'Oops.. An Error Has Occurred',
+        message: error.message
     });
 };
 
-const sendErrorProd = (error, response) => {
+const sendErrorProd = (error, request, response) => {
 
-    //Operational errors: those that we generate with AppError
-    if (error.isOperational) {
-        response.status(error.statusCode).json({
-            status: error.status,
-            message: error.message
-        });
-    }
-    //Other errors: send generic error message
-    else {
+    //Log error to console
+    console.error('Error', error);
 
-        //Log error to console
-        console.error('Error', error);
+    //API Error Handler
+    if (request.originalUrl.startsWith('/api')){
 
-        response.status(500).json({
+        //Operational errors: those that we generate with AppError
+        if (error.isOperational) {
+            return response.status(error.statusCode).json({
+                status: error.status,
+                message: error.message
+            });
+        }
+
+        //Other errors: send generic error message
+        return response.status(500).json({
             status: 'Error',
             message: 'Whoops... something went wrong.'
         });
     }
+
+    //Operational errors: those that we generate with AppError
+    if (error.isOperational) {
+        return response.status(error.statusCode).render('error', {
+            title: 'Oops! Something went wrong..',
+            message: error.message
+        });
+    }
+
+    //Rendered Site Error Handle
+    return response.status(error.statusCode).render('error', {
+        title: 'Oops.. An Error Has Occurred',
+        message: 'Whoops... something went wrong.'
+    });
 };
 
 //Convert standard Error to operational AppError for specific events
@@ -75,12 +103,12 @@ module.exports = (error, request, response, next) => {
     error.status = error.status || 'error';
 
     if (process.env.NODE_ENV === 'development') {
-        sendErrorDev(error, response);
+        sendErrorDev(error, request, response);
     } else if (process.env.NODE_ENV === 'production') {
 
         let err = { ...error };
-
-        console.log("Error name: ", error.name);
+        err.message = error.message;
+        //console.log("Error name: ", error.name);
         //console.log("Err name: ", err.name);
 
         if (error.name === 'CastError'){
@@ -99,7 +127,7 @@ module.exports = (error, request, response, next) => {
             err = handleJWTExpiredError(err);
         }
 
-        sendErrorProd(err, response);
+        sendErrorProd(err, request, response);
     }
 };
 

@@ -1,7 +1,7 @@
+import axios from 'axios';
+import { displayAlert } from './alerts';
 
-const login = async (email, password) => {
-
-    console.log(email, password);
+export const login = async (email, password) => {
 
     try {
         const result = await axios({
@@ -14,18 +14,35 @@ const login = async (email, password) => {
         });
 
         console.log(result);
+
+        if (result.data.status === 'success'){
+            displayAlert('success','Logged in successfully!');
+            window.setTimeout(() => {
+                location.assign('/');
+            }, 1500);
+        }
     }
     catch (e){
-        console.log(e);
+        displayAlert('error', e.response.data.message);
     }
 };
 
-document.querySelector('.form').addEventListener('submit', e => {
-    e.preventDefault();
+export const logout = async () => {
 
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    try {
 
-    login(email, password);
-});
+        const result = await axios({
+            method: 'GET',
+            url: 'http://localhost:3000/api/v1/users/logout'
+        });
 
+        console.log(result);
+
+        if (result.data.status === 'success'){
+            location.reload(true); //'true' required here to force reload from server vs cache
+        }
+    }
+    catch(e){
+        displayAlert('error', 'An error occurred logging out. Please try again. ');
+    }
+};
