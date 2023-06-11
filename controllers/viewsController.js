@@ -41,10 +41,6 @@ exports.getTourDetail = catchAsyncErrors(async (request, response, next) => {
 exports.getLoginForm = (request, response) => {
     response
         .status(200)
-//        .set(
-//            'Content-Security-Policy',
-//            'connect-src https://cdnjs.cloudflare.com'
-//        )
         .render('login', {
             title: 'Login to Your Account'
         });

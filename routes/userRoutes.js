@@ -12,9 +12,9 @@ router.patch('/resetPassword/:token', authController.resetPassword);
 //Require authentication for the routes below
 router.use(authController.protected);
 
+router.get('/account', userController.getCurrentUser, userController.getUserById);
 router.patch('/updatePassword', authController.updatePassword);
-router.get('/me', userController.getCurrentUser, userController.getUserById);
-router.patch('/updateCurrentUserData', userController.updateCurrentUserData);
+router.patch('/updateUserData', userController.updateUserData);
 router.delete('/deleteCurrentUser', userController.deleteCurrentUser);
 
 //Require admin roles for the routes below

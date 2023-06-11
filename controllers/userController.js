@@ -22,7 +22,7 @@ filterObject = (obj, ...allowedFields) => {
     return newObj;
 };
 
-exports.updateCurrentUserData = catchAsyncErrors( async (request, response, next) => {
+exports.updateUserData = catchAsyncErrors( async (request, response, next) => {
 
     //Create error if user POSTs password data
     if (request.body.password || request.body.passwordConfirm){
