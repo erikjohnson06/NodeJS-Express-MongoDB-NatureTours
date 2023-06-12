@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        default: "",
+        default: 'default.jpg',
         maxlength: [250, 'Image names are limited to 250 characters']
     },
     active: {

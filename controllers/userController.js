@@ -2,6 +2,30 @@ const User = require('./../models/userModel');
 const catchAsyncErrors = require('./../utils/catchAsyncErrors');
 const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
+const multer = require('multer');
+
+const multerStorage = multer.diskStorage({
+    destination: (request, file, callback) => {
+        callback(null, 'public/img/users');
+    },
+    filename: (request, file, callback) => {
+        const ext = file.mimetype.split('/')[1];
+        callback(null, `user-${request.user.id}-${Date.now()}.${ext}`);
+    }
+});
+
+const multerFilter = (request, file, callback) => {
+    if (file.mimetype.startsWith('image')) {
+        callback(null, true);
+    } else {
+        callback(new AppError('Please limit file uploads to images only', 400), false);
+    }
+};
+
+const imageUpload = multer({
+    storage: multerStorage,
+    fileFilter: multerFilter
+});
 
 /**
  *
@@ -13,8 +37,8 @@ filterObject = (obj, ...allowedFields) => {
 
     let newObj = {};
 
-    Object.keys(obj).forEach( el => {
-        if (allowedFields.includes(el)){
+    Object.keys(obj).forEach(el => {
+        if (allowedFields.includes(el)) {
             newObj[el] = obj[el];
         }
     });
@@ -22,23 +46,29 @@ filterObject = (obj, ...allowedFields) => {
     return newObj;
 };
 
-exports.updateUserData = catchAsyncErrors( async (request, response, next) => {
+exports.uploadUserImage = imageUpload.single('photo');
+
+exports.updateUserData = catchAsyncErrors(async (request, response, next) => {
 
     //Create error if user POSTs password data
-    if (request.body.password || request.body.passwordConfirm){
+    if (request.body.password || request.body.passwordConfirm) {
         return next(new AppError('Passwords not allowed in this route. Please use /updatePassword.', 400));
     }
 
     //Update user - only allow certain fields to be updated
-    const filteredBody = filterObject(request.body, 'name', 'email');
+    let filteredBody = filterObject(request.body, 'name', 'email');
 
-    const user = await User.findByIdAndUpdate(request.user.id, filteredBody, {new: true, runValidators: true});
+    if (request.file) {
+        filteredBody.image = request.file.filename;
+    }
+
+    const user = await User.findByIdAndUpdate(request.user.id, filteredBody, {new : true, runValidators: true});
 
     response
             .status(200)
             .json({
                 status: "success",
-                data : {
+                data: {
                     user: user
                 }
             });
@@ -59,7 +89,7 @@ exports.deleteCurrentUser = catchAsyncErrors(async (request, response, next) => 
             });
 });
 
-exports.getCurrentUser = (request, response, next)=> {
+exports.getCurrentUser = (request, response, next) => {
     request.params.id = request.user.id;
     next();
 };
