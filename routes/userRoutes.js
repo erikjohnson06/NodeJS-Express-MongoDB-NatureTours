@@ -15,7 +15,7 @@ router.use(authController.protected);
 
 router.get('/account', userController.getCurrentUser, userController.getUserById);
 router.patch('/updatePassword', authController.updatePassword);
-router.patch('/updateUserData', userController.uploadUserImage, userController.updateUserData);
+router.patch('/updateUserData', userController.uploadUserImage, userController.resizeUserImage, userController.updateUserData);
 router.delete('/deleteCurrentUser', userController.deleteCurrentUser);
 
 //Require admin roles for the routes below
