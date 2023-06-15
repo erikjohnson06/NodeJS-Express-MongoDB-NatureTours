@@ -1,9 +1,70 @@
+//Image processing Libraries
+const multer = require('multer');
+const sharp = require('sharp');
+
 //const fs = require('fs');
 const Tour = require('./../models/tourModel');
 const catchAsyncErrors = require('./../utils/catchAsyncErrors');
 const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
 //const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
+
+
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (request, file, callback) => {
+    if (file.mimetype.startsWith('image')) {
+        callback(null, true);
+    } else {
+        callback(new AppError('Please limit file uploads to images only', 400), false);
+    }
+};
+
+const imageUpload = multer({
+    storage: multerStorage,
+    fileFilter: multerFilter
+});
+
+exports.uploadTourImages = imageUpload.fields([
+    {name: 'imageCover', maxCount: 1},
+    {name: 'images', maxCount: 3}
+]);
+
+exports.resizeTourImages = catchAsyncErrors(async (request, response, next) => {
+
+    if (!request.files.imageCover || !request.files.images) {
+        return next();
+    }
+
+    //Cover Image
+    request.body.imageCover = `tour-${request.params.id}-${Date.now()}-cover.jpeg`;
+
+    await sharp(request.files.imageCover[0].buffer)
+            .resize(2000, 1333) //3-to-2 ratio
+            .toFormat('jpeg')
+            .jpeg({quality: 90})
+            .toFile(`public/img/tours/${request.body.imageCover}`);
+
+    //Tour Images
+    request.body.images = [];
+
+    await Promise.all(
+            request.files.images.map(async (file, index) => {
+
+                const filename = `tour-${request.params.id}-${Date.now()}-${index + 1}.jpeg`;
+
+                await sharp(file.buffer)
+                        .resize(2000, 1333) //3-to-2 ratio
+                        .toFormat('jpeg')
+                        .jpeg({quality: 90})
+                        .toFile(`public/img/tours/${filename}`);
+
+                request.body.images.push(filename);
+            })
+            );
+
+    next();
+});
 
 //Middleware to ensure a tour id is valid
 exports.checkId = (request, response, next, val) => {

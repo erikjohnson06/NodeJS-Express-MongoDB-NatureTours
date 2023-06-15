@@ -1,4 +1,4 @@
- //Image processing Libraries
+//Image processing Libraries
 const multer = require('multer');
 const sharp = require('sharp');
 
@@ -32,7 +32,7 @@ const imageUpload = multer({
     fileFilter: multerFilter
 });
 
-exports.resizeUserImage = (request, response, next) => {
+exports.resizeUserImage = catchAsyncErrors(async (request, response, next) => {
 
     if (!request.file){
         return next();
@@ -40,14 +40,15 @@ exports.resizeUserImage = (request, response, next) => {
 
     request.file.filename = `user-${request.user.id}-${Date.now()}.jpeg`;
 
-    sharp(request.file.buffer)
+    await sharp(request.file.buffer)
             .resize(500, 500)
             .toFormat('jpeg')
             .jpeg({quality: 90})
             .toFile(`public/img/users/${request.file.filename}`);
 
     next();
-};
+});
+
 /**
  *
  * @param {type} obj
@@ -67,7 +68,7 @@ filterObject = (obj, ...allowedFields) => {
     return newObj;
 };
 
-exports.uploadUserImage = imageUpload.single('photo');
+exports.uploadUserImage = imageUpload.single('image');
 
 exports.updateUserData = catchAsyncErrors(async (request, response, next) => {
 
