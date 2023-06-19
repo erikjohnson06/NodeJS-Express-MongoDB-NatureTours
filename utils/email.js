@@ -1,6 +1,9 @@
 const nodemailer = require('nodemailer');
+const pug = require('pug');
+const htmlToText = require('html-to-text');
 
 module.exports = class Email {
+
     constructor(user, url){
         this.to = user.email;
         this.firstName = user.name.split(' ')[0];
@@ -9,10 +12,9 @@ module.exports = class Email {
     }
 
     /**
-     *
-     * @returns {Module.exports.createTransport.mailer|EmailconstructorcreateTransportsend.createTransport.mailer|Function.createTransport.mailer}
+     * @returns {Module.exports.createTransport.mailer}
      */
-    createTransport(){
+    newTransport(){
 
         if (process.env.NODE_ENV === 'production'){
             //Sendgrid transporter
@@ -29,37 +31,44 @@ module.exports = class Email {
     }
 
     /**
-     *
      * @param {type} template
      * @param {type} subject
-     * @returns {undefined}
+     * @returns {void}
      */
-    send(template, subject){
+    async send(template, subject) {
 
         //Render HTML template
+        const html = pug.renderFile(`${__dirname}/../views/emails/${template}.pug`,
+            {
+                firstName: this.firstName,
+                url: this.url,
+                subject: subject
+            }
+        );
 
         //Define email options
         const mailOptions = {
-            from: `${process.env.MAIL_FROM_ADDRESS}`,
-            to: options.email,
-            subject: options.subject,
-            text: options.message
+            from: this.from,
+            to: this.to,
+            subject: subject,
+            html: html,
+            text: htmlToText.fromString(html)
         };
 
         //Create transport and send email
-
+        await this.newTransport().sendMail(mailOptions);
     }
 
-    sendWelcome(){
-        this.send('welcome', 'Welcome to Nature Tours!');
+    async sendWelcome(){
+        await this.send('welcome', 'Welcome to Nature Tours!');
     }
 
-    sendPasswordReset(){
-        this.send();
+    async sendPasswordReset(){
+        await this.send();
     }
 };
 
-const sendEmail = async (options) => {
+//const sendEmail = async (options) => {
 
     //Create transporter
 //    const transporter = nodemailer.createTransport({
@@ -79,8 +88,8 @@ const sendEmail = async (options) => {
 //        text: options.message
 //    };
 
-    //Send
-    await transporter.sendMail(mailOptions);
-};
+//    //Send
+//    await transporter.sendMail(mailOptions);
+//};
 
 //module.exports = sendEmail;
