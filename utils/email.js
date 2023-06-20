@@ -52,7 +52,7 @@ module.exports = class Email {
             to: this.to,
             subject: subject,
             html: html,
-            text: htmlToText.fromString(html)
+            text: htmlToText.convert(html)
         };
 
         //Create transport and send email
@@ -64,7 +64,7 @@ module.exports = class Email {
     }
 
     async sendPasswordReset(){
-        await this.send();
+        await this.send('passwordReset', 'Reset Your Password');
     }
 };
 

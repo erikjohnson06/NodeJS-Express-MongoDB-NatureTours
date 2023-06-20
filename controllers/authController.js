@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const User = require('./../models/userModel');
 const catchAsyncErrors = require('./../utils/catchAsyncErrors');
-const sendEmail = require('./../utils/email');
+const Email = require('./../utils/email');
 const AppError = require('./../utils/appError');
 
 /**
@@ -70,6 +70,9 @@ exports.signup = catchAsyncErrors(async(request, response, next) => {
         passwordConfirm: request.body.passwordConfirm,
         passwordLastUpdated: request.body.passwordLastUpdated
     });
+
+    const url = `${request.protocol}://${request.get('host')}/account`;
+    await new Email(newUser, url).sendWelcome();
 
     createAndSendToken(newUser, "User Created Successfully", 201, response);
 });
@@ -218,17 +221,17 @@ exports.forgotPassword = catchAsyncErrors(async(request, response, next) => {
         validateBeforeSave: false
     });
 
-    //Send to user via email
-    const resetURL = `${request.protocol}://${request.get('host')}/api/v1/users/resetPassword/${token}`;
-
-    const message = `Forgot your password? Reset here: ${resetURL}`;
-
     try {
-        await sendEmail({
-            email: user.email,
-            subject: 'Reset Password',
-            message: message
-        });
+
+        //Send to user via email
+        const resetURL = `${request.protocol}://${request.get('host')}/api/v1/users/resetPassword/${token}`;
+
+        const message = `Forgot your password? Reset here: ${resetURL}`;
+
+        await new Email(
+            user,
+            resetURL
+        ).sendPasswordReset();
 
         response.status(200).json({
             status: 'success',
@@ -256,11 +259,13 @@ exports.resetPassword = catchAsyncErrors(async(request, response, next) => {
             .update(request.params.token)
             .digest('hex');
 
-    //Check token expiration (must not be expired)
+console.log(Date.now());
+
+    //Check token expiration (must be within 10 minutes of creation)
     const user = await User.findOne({
         passwordResetToken: hashedToken,
         passwordResetExpires: {
-            $gt: Date.now()
+            $gt: Date.now() - (1 * 60 * 1000)
         }
     });
 
