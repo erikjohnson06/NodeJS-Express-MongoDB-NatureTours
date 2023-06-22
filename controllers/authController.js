@@ -259,8 +259,6 @@ exports.resetPassword = catchAsyncErrors(async(request, response, next) => {
             .update(request.params.token)
             .digest('hex');
 
-console.log(Date.now());
-
     //Check token expiration (must be within 10 minutes of creation)
     const user = await User.findOne({
         passwordResetToken: hashedToken,
