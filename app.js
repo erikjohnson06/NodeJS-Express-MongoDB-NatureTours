@@ -40,9 +40,10 @@ app.use(helmet({
             "default-src" : ["'self'", "blob:", "localhost:3000", "ws:"],
             "connect-src" : ["'self'", "localhost:3000", "ws://localhost:*/",  "https://api.mapbox.com/", "https://events.mapbox.com/"],
             "worker-src" : ["'self'", "blob:"],
-            "script-src": ["'self'", "blob:", "localhost:3000", "https://cdnjs.cloudflare.com/", "https://*.tiles.mapbox.com/", "https://api.mapbox.com/", "https://events.mapbox.com/"],
+            "script-src": ["'self'", "blob:", "localhost:3000", "https://cdnjs.cloudflare.com/", "https://*.tiles.mapbox.com/", "https://api.mapbox.com/", "https://events.mapbox.com/", "https://js.stripe.com/v3/"],
             "style-src": ["'self'", "https://fonts.googleapis.com/", "https://api.mapbox.com/", "https://*.tiles.mapbox.com/", "'unsafe-inline'"],
-            "font-src": ["'self'", "https://fonts.googleapis.com/", "https://fonts.gstatic.com/"]
+            "font-src": ["'self'", "https://fonts.googleapis.com/", "https://fonts.gstatic.com/"],
+            "frame-src" : ["https://js.stripe.com/v3/"]
         }
     }
 }));

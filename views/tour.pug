@@ -4,9 +4,7 @@ include _reviewCard
 block append head
     script(defer src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js')
     link(defer href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet')
-    //- link(defer href='/css/mapbox-gl.css' rel='stylesheet')
-    //- script(defer src='/js/mapbox-gl.js')
-    //- script(defer src='/js/mapbox.js')
+    script(defer src='https://js.stripe.com/v3/')
 
 mixin overviewBox(label, text, icon)
     div.overview-box__detail
@@ -90,7 +88,8 @@ block content
             div.cta__content
                 h2.heading-secondary What are you waiting for?
                 p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
-                button.btn.btn--green.span-all-rows Book tour now!
 
-block append js
-    //- script(defer src='/js/mapbox.js')
+                if user
+                    button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book this tour
+                else
+                    a.btn.btn--green.span-all-rows(href='/login') Login to book this tour
