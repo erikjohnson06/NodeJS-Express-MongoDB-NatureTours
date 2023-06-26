@@ -1,7 +1,7 @@
-const Tour = require('./../models/tourModel');
-const User = require('./../models/userModel');
-const catchAsyncErrors = require('./../utils/catchAsyncErrors');
-const AppError = require('./../utils/appError');
+const Tour = require('../models/tourModel');
+const User = require('../models/userModel');
+const catchAsyncErrors = require('../utils/catchAsyncErrors');
+const AppError = require('../utils/appError');
 
 exports.getOverview = catchAsyncErrors(async (request, response, next) => {
 

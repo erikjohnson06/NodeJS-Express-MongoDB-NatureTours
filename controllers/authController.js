@@ -1,10 +1,10 @@
 const {promisify} = require('util');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-const User = require('./../models/userModel');
-const catchAsyncErrors = require('./../utils/catchAsyncErrors');
-const Email = require('./../utils/email');
-const AppError = require('./../utils/appError');
+const User = require('../models/userModel');
+const catchAsyncErrors = require('../utils/catchAsyncErrors');
+const Email = require('../utils/email');
+const AppError = require('../utils/appError');
 
 /**
  * Create new JSON Web Token

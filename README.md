@@ -21,4 +21,4 @@ MVC design
 
 PUG templating
 
-Stripe payments
+Stripe payments via API and webhooks

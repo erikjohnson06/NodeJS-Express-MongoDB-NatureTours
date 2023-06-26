@@ -3,9 +3,9 @@ const multer = require('multer');
 const sharp = require('sharp');
 
 //const fs = require('fs');
-const Tour = require('./../models/tourModel');
-const catchAsyncErrors = require('./../utils/catchAsyncErrors');
-const AppError = require('./../utils/appError');
+const Tour = require('../models/tourModel');
+const catchAsyncErrors = require('../utils/catchAsyncErrors');
+const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
 //const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
 

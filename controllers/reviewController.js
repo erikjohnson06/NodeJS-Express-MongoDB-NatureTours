@@ -1,5 +1,5 @@
-const Review = require('./../models/reviewModel');
-const catchAsyncErrors = require('./../utils/catchAsyncErrors');
+const Review = require('../models/reviewModel');
+const catchAsyncErrors = require('../utils/catchAsyncErrors');
 const factory = require('./handlerFactory');
 
 exports.setTourAndUserIds = catchAsyncErrors(async (request, response, next) => {

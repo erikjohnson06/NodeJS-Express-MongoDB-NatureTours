@@ -43,7 +43,7 @@ app.use(helmet({
             "script-src": ["'self'", "blob:", "localhost:3000", "https://cdnjs.cloudflare.com/", "https://*.tiles.mapbox.com/", "https://api.mapbox.com/", "https://events.mapbox.com/", "https://js.stripe.com/v3/"],
             "style-src": ["'self'", "https://fonts.googleapis.com/", "https://api.mapbox.com/", "https://*.tiles.mapbox.com/", "'unsafe-inline'"],
             "font-src": ["'self'", "https://fonts.googleapis.com/", "https://fonts.gstatic.com/"],
-            "frame-src" : ["https://js.stripe.com/v3/"]
+            "frame-src" : ["https://*.stripe.com/"]
         }
     }
 }));
