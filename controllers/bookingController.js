@@ -11,7 +11,7 @@ exports.getCheckoutSession = catchAsyncErrors(async (request, response, next) =>
     //Get tour by Id
     const tour = await Tour.findById(request.params.tourId);
 
-    console.log("slug: ", tour.slug);
+    //console.log("slug: ", tour.slug);
 
     //Create checkout session
     const session = await stripe.checkout.sessions.create({
@@ -55,3 +55,9 @@ exports.createBookingCheckout = catchAsyncErrors(async (request, response, next)
     //Redirect back to the homepage without the query string
     response.redirect(request.originalUrl.split('?')[0]);
 });
+
+exports.createBooking = factory.createDocument(Booking);
+exports.getAllBookings = factory.getAllDocuments(Booking);
+exports.getBookingById = factory.getDocument(Booking);
+exports.updateBookingById = factory.updateDocument(Booking);
+exports.deleteBookingById = factory.deleteDocument(Booking);
