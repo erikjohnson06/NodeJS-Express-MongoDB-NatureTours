@@ -8,6 +8,8 @@ const helmet = require('helmet');
 const hpp = require('hpp');
 const morgan = require('morgan'); //HTTP Request logging package
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
+const cors = require('cors');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -18,6 +20,9 @@ const AppError = require('./utils/appError');
 const errorHandler = require('./controllers/errorController');
 
 const app = express();
+
+//Required if hosting on platform like Heroku
+//app.enable('trust proxy');
 
 //Set template engine / views folder location
 app.set('view engine', 'pug');
@@ -32,6 +37,10 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 //GLOBAL MIDDLEWARE
+
+//CORS - Cross-Origin Resource Sharing for incoming API requests. Sets "Access-Control-Allow-Origin" header.
+app.use(cors());
+app.options('*', cors());
 
 //Helmet - Set security HTTP headers
 app.use(helmet({
@@ -86,11 +95,11 @@ app.use(hpp({
     ]
 }));
 
+app.use(compression()); //Compress HTTP Responses
+
 //Test middleware
 app.use((request, response, next) => {
     request.requestTime = new Date().toISOString();
-    //console.log(request.cookies);
-
     next();
 });
 

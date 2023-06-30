@@ -26,22 +26,20 @@ const createToken = id => {
  * @param {Object} user
  * @param {string} message
  * @param {int} statusCode
+ * @param {Object} request
  * @param {Object} response
  * @return {void}
  */
-const createAndSendToken = (user, message, statusCode, response) => {
+const createAndSendToken = (user, message, statusCode, request, response) => {
 
     const token = createToken(user._id);
 
     const cookieOptions = {
         expires: new Date(Date.now() + (process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000)), //Set expiration to 90 days
-        httpOnly: true
+        httpOnly: true,
+        //Secure property will only work using HTTPS protocol.
+        secure: (request.secure || request.headers['x-forwarded-proto'] === 'https')
     };
-
-    //Secure property will only work using HTTPS protocol. Ignore if not in production.
-    if (process.env.NODE_ENV === 'production') {
-        cookieOptions.secure = true;
-    }
 
     response.cookie('jwt', token, cookieOptions);
 
@@ -74,7 +72,7 @@ exports.signup = catchAsyncErrors(async(request, response, next) => {
     const url = `${request.protocol}://${request.get('host')}/account`;
     await new Email(newUser, url).sendWelcome();
 
-    createAndSendToken(newUser, "User Created Successfully", 201, response);
+    createAndSendToken(newUser, "User Created Successfully", 201, request, response);
 });
 
 exports.login = catchAsyncErrors(async(request, response, next) => {
@@ -93,7 +91,7 @@ exports.login = catchAsyncErrors(async(request, response, next) => {
     }
 
     //Send JWT token to client
-    createAndSendToken(user, "User Signed In Successfully", 200, response);
+    createAndSendToken(user, "User Signed In Successfully", 200, request, response);
 });
 
 exports.logout = catchAsyncErrors(async(request, response, next) => {
@@ -120,8 +118,6 @@ exports.protected = catchAsyncErrors(async(request, response, next) => {
         token = request.cookies.jwt;
     }
 
-    //console.log("token: ", token);
-
     if (!token) {
         return next(new AppError('Please login to access this resource', 401));
     }
@@ -129,12 +125,8 @@ exports.protected = catchAsyncErrors(async(request, response, next) => {
     //Validate token
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-    //console.log("decoded: ", decoded);
-
     //Ensure user associated with this token still exists (decoded.id = user.id)
     const currentUser = await User.findById(decoded.id);
-
-    //console.log("user: ", currentUser);
 
     if (!currentUser) {
         return next(new AppError('Invalid token', 401));
@@ -164,12 +156,8 @@ exports.isLoggedIn = async(request, response, next) => {
             //Validate token
             const decoded = await promisify(jwt.verify)(request.cookies.jwt, process.env.JWT_SECRET);
 
-            //console.log("decoded: ", decoded);
-
             //Ensure user associated with this token still exists (decoded.id = user.id)
             const currentUser = await User.findById(decoded.id);
-
-            //console.log("user: ", currentUser);
 
             if (!currentUser) {
                 return next();
@@ -280,7 +268,7 @@ exports.resetPassword = catchAsyncErrors(async(request, response, next) => {
     await user.save();
 
     //Log in user via JWT
-    createAndSendToken(user, "Password Reset Successfully", 200, response);
+    createAndSendToken(user, "Password Reset Successfully", 200, request, response);
 });
 
 exports.updatePassword = catchAsyncErrors(async(request, response, next) => {
@@ -300,5 +288,5 @@ exports.updatePassword = catchAsyncErrors(async(request, response, next) => {
     await user.save();
 
     //Send new JWT
-    createAndSendToken(user, "Password Updated Successfully", 200, response);
+    createAndSendToken(user, "Password Updated Successfully", 200, request, response);
 });

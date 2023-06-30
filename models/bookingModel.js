@@ -11,6 +11,10 @@ const bookingSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
+    confirmation : {
+        type: String,
+        required: true
+    },
     price: {
         type: Number,
         required: [true, 'Booking must have a price'],

@@ -120,8 +120,6 @@ userSchema.methods.verifyPassword = async function(input, userPassword){
  */
 userSchema.methods.changedPasswordAfter = function(JWTTimestamp){
 
-    console.log(this.passwordLastUpdated, JWTTimestamp);
-
     if (this.passwordLastUpdated){
         const timestamp = parseInt(this.passwordLastUpdated.getTime() / 1000, 10);
         return JWTTimestamp < timestamp; //100 < 200
@@ -142,8 +140,6 @@ userSchema.methods.createPasswordResetToken = function(){
             .createHash('sha256')
             .update(token)
             .digest('hex');
-
-    console.log({token}, this.passwordResetToken);
 
     this.passwordResetExpires = Date.now() + (1 * 60 * 1000); //Set to expire in 10 minutes
 

@@ -2,22 +2,21 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const Booking = require('../models/bookingModel');
 const Tour = require('../models/tourModel');
+const User = require('../models/userModel');
 const catchAsyncErrors = require('../utils/catchAsyncErrors');
 const factory = require('./handlerFactory');
-
 
 exports.getCheckoutSession = catchAsyncErrors(async (request, response, next) => {
 
     //Get tour by Id
     const tour = await Tour.findById(request.params.tourId);
-
-    //console.log("slug: ", tour.slug);
+    const conf = tour.id + request.user.id + ;
 
     //Create checkout session
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
-        success_url:`${request.protocol}://${request.get('host')}/?tour=${request.params.tourId}&user=${request.user.id}&price=${tour.price}`,
-        cancel_url:`${request.protocol}://${request.get('host')}/tour/${tour.slug}`,
+        success_url:`${request.protocol}://${request.get('host')}/booking/checkout-complete/${request.params.tourId}/u_id/${request.user.id}/conf/${conf}`, //&price=${tour.price}
+        cancel_url:`${request.protocol}://${request.get('host')}/tour/${tour.slug}?alert=error`,
         customer_email: request.user.email,
         client_reference_id: request.params.tourId,
         line_items: [
@@ -44,16 +43,46 @@ exports.getCheckoutSession = catchAsyncErrors(async (request, response, next) =>
 });
 
 exports.createBookingCheckout = catchAsyncErrors(async (request, response, next) => {
-    const { tour, user, price } = request.query;
 
-    if (!tour && !user && !price) {
-        return next();
+    //console.log(request.user);
+
+    try {
+
+//        const t_id = request.params.t_id;
+//        const u_id = request.params.u_id;
+
+        const { t_id, u_id } = request.params;
+
+        console.log("t_id: ", t_id);
+        console.log("u_id: ", u_id);
+
+
+        if (!t_id && !u_id) {
+            throw "An unexpected error has occurred. Unable to book tour";
+        }
+
+        const tour = await Tour.findById(t_id);
+        const user = await User.findById(u_id);
+
+        console.log("tour: ", tour);
+        console.log("user: ", user);
+
+        if (!tour || !user){
+            throw "An unexpected error has occurred. Unable to book tour";
+        }
+
+        await Booking.create({ tour: tour.id, user: user.id, price: tour.price });
+
+        //Redirect back to the homepage without the query string
+        //response.redirect(request.originalUrl.split('?')[0]);
+        response.redirect('/my-tours?alert=booking');
     }
-
-    await Booking.create({ tour, user, price });
-
-    //Redirect back to the homepage without the query string
-    response.redirect(request.originalUrl.split('?')[0]);
+    catch (e){
+        response.status(500).json({
+            status: 'error',
+            message: e
+        });
+    }
 });
 
 exports.createBooking = factory.createDocument(Booking);

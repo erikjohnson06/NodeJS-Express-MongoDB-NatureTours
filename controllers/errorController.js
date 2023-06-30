@@ -97,8 +97,6 @@ const handleJWTExpiredError = () => {
 
 module.exports = (error, request, response, next) => {
 
-    //console.log(error.stack);
-
     error.statusCode = error.statusCode || 500;
     error.status = error.status || 'error';
 
@@ -108,8 +106,6 @@ module.exports = (error, request, response, next) => {
 
         let err = { ...error };
         err.message = error.message;
-        //console.log("Error name: ", error.name);
-        //console.log("Err name: ", err.name);
 
         if (error.name === 'CastError'){
             err = handleMongooseCastError(err);

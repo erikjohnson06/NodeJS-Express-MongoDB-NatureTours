@@ -3,6 +3,7 @@ import { login, logout } from './login';
 import { displayMap } from './mapbox';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
+import { displayAlert } from './alerts';
 
 //MAPBOX
 const mapBox = document.getElementById('map');
@@ -15,6 +16,7 @@ const loginForm = document.querySelector('.form--login');
 const logoutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
+const alertMessage = document.querySelector('body').dataset.alert;
 
 if (mapBox){
     const locations = JSON.parse(mapBox.dataset.locations);
@@ -58,8 +60,6 @@ if (userDataForm){
         form.append('email', document.getElementById('email').value);
         form.append('image', document.getElementById('image').files[0]);
 
-        console.log(form);
-
         updateSettings(form, 'data');
     });
 }
@@ -84,3 +84,7 @@ if (userPasswordForm){
     });
 }
 
+
+if (alertMessage){
+    displayAlert('success', alertMessage, 20);
+}

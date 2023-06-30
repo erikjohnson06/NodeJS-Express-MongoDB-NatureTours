@@ -87,7 +87,6 @@ exports.checkId = (request, response, next, val) => {
 //Middleware to check for required fields for a new tour record
 //exports.checkBody = (request, response, next) => {
 //
-//    console.log("checkBody:" , request.body, typeof (request.body.name), typeof (request.body.price));
 //    if (typeof (request.body.name) === "undefined" || typeof (request.body.price) === "undefined") {
 //    //if (!request.body.name || !request.body.price) {
 //        return response
@@ -210,8 +209,6 @@ exports.getToursWithinDistance = catchAsyncErrors(async (request, response, next
     if (!lat || !long) {
         next(new AppError('Unable to resolve lat/long coordinates. Required format: lat,long', 400));
     }
-
-    //console.log(distance, latlong, lat, long, unit);
 
     const tours = await Tour.find({
         startLocation: {$geoWithin: {$centerSphere: [[long, lat], radius]}}

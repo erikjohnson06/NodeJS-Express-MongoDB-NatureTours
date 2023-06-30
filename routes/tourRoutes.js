@@ -4,8 +4,6 @@ const tourController = require('./../controllers/tourController');
 const reviewRouter = require('./../routes/reviewRoutes');
 const router = express.Router();
 
-//router.param('id', tourController.checkId);
-
 router.route('/top-5-bargain-tours')
         .get(tourController.aliasTopBargainTours, tourController.getAllTours);
 

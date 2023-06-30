@@ -169,9 +169,7 @@ tourSchema.pre('save', function (next) {
  */
 //tourSchema.pre('save', async function (next) {
 //    const guidePromises = this.guides.map( async id => await User.findById(id)); //Results in an array of Promise objects
-//
-//    console.log("guidePromises: ", guidePromises);
-//
+
 //    this.guides = await Promise.all(guidePromises);
 //    next();
 //});
@@ -204,11 +202,6 @@ tourSchema.post('save', function (doc, next) {
     next();
 });
 
-tourSchema.post(/^find/, function (docs, next) {
-    console.log("Query took " + (Date.now() - this.start) + " milliseconds.");
-    next();
-});
-
 //Aggregration Middleware
 //tourSchema.pre('aggregate', function (next) {
 //
@@ -216,7 +209,6 @@ tourSchema.post(/^find/, function (docs, next) {
 //        $match: {secretTour: {$ne: true}}
 //    });
 //
-//    //console.log(this.pipeline);
 //    next();
 //});
 
