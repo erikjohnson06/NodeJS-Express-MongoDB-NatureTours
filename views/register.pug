@@ -1,0 +1,30 @@
+extends base
+
+block content
+    main.main
+        div.register-form
+            h2.heading-secondary.ma-bt-lg Create an Account
+            form.form.form--register
+                .form__group
+                    label.form__label(for='first_name') First Name
+                    input#first_name.form__input(type='text', placeholder='', required)
+                .form__group
+                    label.form__label(for='last_name') Last Name
+                    input#last_name.form__input(type='text', placeholder='', required)
+                .form__group.ma-bt-md
+                    label.form__label(for='email') Email address
+                    input#email.form__input(type='email', placeholder='you@example.com', required)
+                .form__group.ma-bt-md
+                    label.form__label(for='password') Password
+                    input#password.form__input(type='password', placeholder='••••••••', required, minlength='8')
+                .form__group.ma-bt-md
+                    label.form__label(for='password_confirm') Confirm Password
+                    input#password_confirm.form__input(type='password', placeholder='••••••••', required, minlength='8')
+                .form__group.ma-bt-md
+                    label.form__label(for='role') Role
+                    select#role.form__input
+                        option(value='user') User
+                        option(value='guide') Guide
+
+                .form__group
+                    button.btn.btn--green Register

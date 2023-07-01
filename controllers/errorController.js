@@ -5,7 +5,7 @@ const sendErrorDev = (error, request, response) => {
     console.error('Error', error);
 
     //API Error Handler
-    if (request.originalUrl.startsWith('/api')){
+    if (request.originalUrl.startsWith('/api')) {
         return response.status(error.statusCode).json({
             status: error.status,
             message: error.message,
@@ -27,7 +27,7 @@ const sendErrorProd = (error, request, response) => {
     console.error('Error', error);
 
     //API Error Handler
-    if (request.originalUrl.startsWith('/api')){
+    if (request.originalUrl.startsWith('/api')) {
 
         //Operational errors: those that we generate with AppError
         if (error.isOperational) {
@@ -70,7 +70,7 @@ const handleMongooseDuplicateFieldError = error => {
     let message = "Duplicate field value";
 
     //Attempt to extract the entered value from the error in keyValue object.
-    if (typeof error.keyValue !== "undefined" && typeof Object.values(error.keyValue)[0] !== "undefined"){
+    if (typeof error.keyValue !== "undefined" && typeof Object.values(error.keyValue)[0] !== "undefined") {
         message += ": '" + Object.values(error.keyValue)[0] + "'";
     }
 
@@ -81,8 +81,8 @@ const handleMongooseDuplicateFieldError = error => {
 
 const handleMongooseValidationError = error => {
 
-    let errors = Object.values(error.errors).map( el => el.message );
-    let message = `Invalid input data. ${errors.join('. ')}` ;
+    let errors = Object.values(error.errors).map(el => el.message);
+    let message = `Invalid input data. ${errors.join('. ')}`;
 
     return new AppError(message, 400);
 };
@@ -104,22 +104,22 @@ module.exports = (error, request, response, next) => {
         sendErrorDev(error, request, response);
     } else if (process.env.NODE_ENV === 'production') {
 
-        let err = { ...error };
+        let err = {...error};
         err.message = error.message;
 
-        if (error.name === 'CastError'){
+        if (error.name === 'CastError') {
             err = handleMongooseCastError(err);
         }
-        if (error.code === 11000){ //11000 = Duplicate field error in Mongoose
+        if (error.code === 11000) { //11000 = Duplicate field error in Mongoose
             err = handleMongooseDuplicateFieldError(err);
         }
-        if (error.name === 'ValidationError'){
+        if (error.name === 'ValidationError') {
             err = handleMongooseValidationError(err);
         }
-        if (error.name === 'JsonWebTokenError'){
+        if (error.name === 'JsonWebTokenError') {
             err = handleJWTError(err);
         }
-        if (error.name === 'TokenExpiredError'){
+        if (error.name === 'TokenExpiredError') {
             err = handleJWTExpiredError(err);
         }
 

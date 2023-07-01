@@ -2,13 +2,10 @@
 const multer = require('multer');
 const sharp = require('sharp');
 
-//const fs = require('fs');
 const Tour = require('../models/tourModel');
 const catchAsyncErrors = require('../utils/catchAsyncErrors');
 const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
-//const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
-
 
 const multerStorage = multer.memoryStorage();
 
@@ -66,36 +63,20 @@ exports.resizeTourImages = catchAsyncErrors(async (request, response, next) => {
     next();
 });
 
-//Middleware to ensure a tour id is valid
-exports.checkId = (request, response, next, val) => {
-
-    const id = parseInt(request.params.id);
-//    const tour = tours.find(el => el.id === id);
-
-//    if (!tour) {
-//        return response
-//                .status(404)
-//                .json({
-//                    status: "error",
-//                    message: "Invalid ID"
-//                });
-//    }
-
-    next();
-};
-
-//Middleware to check for required fields for a new tour record
-//exports.checkBody = (request, response, next) => {
+////Middleware to ensure a tour id is valid
+//exports.checkId = (request, response, next, val) => {
 //
-//    if (typeof (request.body.name) === "undefined" || typeof (request.body.price) === "undefined") {
-//    //if (!request.body.name || !request.body.price) {
-//        return response
-//                .status(400)
-//                .json({
-//                    status: "error",
-//                    message: "Invalid Tour Name or Price"
-//                });
-//    }
+//    const id = parseInt(request.params.id);
+////    const tour = tours.find(el => el.id === id);
+//
+////    if (!tour) {
+////        return response
+////                .status(404)
+////                .json({
+////                    status: "error",
+////                    message: "Invalid ID"
+////                });
+////    }
 //
 //    next();
 //};
@@ -130,11 +111,11 @@ exports.getTourStats = catchAsyncErrors(async (request, response, next) => {
         },
         {
             $sort: {averagePrice: 1} //1 = ASC
-        },
-                //Match result set again
-                //{
-                //    $match: {_id: {$ne: 'EASY'}}
-                //}
+        }
+        //Match result set again
+        //{
+        //    $match: {_id: {$ne: 'EASY'}}
+        //}
     ]);
 
     response.status(200).json({
@@ -267,6 +248,9 @@ exports.getDistanceToTourStartingPoints = catchAsyncErrors(async (request, respo
     });
 });
 
+/**
+ * CRUD Operations
+ */
 exports.getAllTours = factory.getAllDocuments(Tour);
 exports.getTourById = factory.getDocument(Tour, {path: 'reviews'});
 exports.createTour = factory.createDocument(Tour);

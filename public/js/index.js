@@ -1,5 +1,6 @@
 import '@babel/polyfill';
 import { login, logout } from './login';
+import { register } from './register';
 import { displayMap } from './mapbox';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
@@ -14,6 +15,7 @@ const bookTourBtn = document.getElementById('book-tour');
 //LOGIN / LOGOUT
 const loginForm = document.querySelector('.form--login');
 const logoutBtn = document.querySelector('.nav__el--logout');
+const registerForm = document.querySelector('.form--register');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const alertMessage = document.querySelector('body').dataset.alert;
@@ -49,6 +51,24 @@ if (loginForm){
 
 if (logoutBtn){
     logoutBtn.addEventListener('click', logout);
+}
+
+
+if (registerForm){
+
+    registerForm.addEventListener('submit', e => {
+        e.preventDefault();
+
+        const firstName = document.getElementById('first_name').value;
+        const lastName = document.getElementById('last_name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const passwordConfirm = document.getElementById('password_confirm').value;
+        const role = document.getElementById('role');
+        const roleVal = role.options[role.selectedIndex].value;
+
+        register(firstName, lastName, email, password, passwordConfirm, roleVal);
+    });
 }
 
 if (userDataForm){

@@ -5,7 +5,6 @@ const AppError = require('../utils/appError');
 /**
  *
  * @param {Object} Model
- * @returns {unresolved}
  */
 exports.updateDocument = Model =>
     catchAsyncErrors(async (request, response, next) => {
@@ -27,9 +26,7 @@ exports.updateDocument = Model =>
     });
 
 /**
- *
  * @param {Object} Model
- * @returns {unresolved}
  */
 exports.deleteDocument = Model =>
     catchAsyncErrors(async (request, response, next) => {
@@ -47,7 +44,9 @@ exports.deleteDocument = Model =>
         });
     });
 
-
+/**
+ * @param {Object} Model
+ */
 exports.createDocument = Model =>
     catchAsyncErrors(async (request, response, next) => {
 
@@ -60,6 +59,10 @@ exports.createDocument = Model =>
         });
     });
 
+/**
+ * @param {Object} Model
+ * @param {Object} populateOptions
+ */
 exports.getDocument = (Model, populateOptions) =>
     catchAsyncErrors(async (request, response, next) => {
 
@@ -84,6 +87,9 @@ exports.getDocument = (Model, populateOptions) =>
                 });
     });
 
+/**
+ * @param {Object} Model
+ */
 exports.getAllDocuments = Model =>
     catchAsyncErrors(async (request, response, next) => {
 

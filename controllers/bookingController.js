@@ -1,22 +1,41 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const crypto = require('crypto');
 
 const Booking = require('../models/bookingModel');
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel');
 const catchAsyncErrors = require('../utils/catchAsyncErrors');
+const Email = require('../utils/email');
 const factory = require('./handlerFactory');
+
+/**
+ * Return a date string for use in confirmation code
+ *
+ * @returns {String}
+ */
+const getBookingDateString = () => {
+
+    let d = new Date();
+    return d.getFullYear().toString() + (d.getMonth() + 1).toString() + d.getDate().toString();
+};
 
 exports.getCheckoutSession = catchAsyncErrors(async (request, response, next) => {
 
     //Get tour by Id
     const tour = await Tour.findById(request.params.tourId);
-    const conf = tour.id + request.user.id + ;
+
+    //Create a confirmation code for added security
+    const conf = crypto
+            .createHash('sha256')
+            .update(tour.id + request.user.id + getBookingDateString())
+            .digest('hex')
+            .slice(0, 10); //Use the first 10 characters as the confirmation code
 
     //Create checkout session
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
-        success_url:`${request.protocol}://${request.get('host')}/booking/checkout-complete/${request.params.tourId}/u_id/${request.user.id}/conf/${conf}`, //&price=${tour.price}
-        cancel_url:`${request.protocol}://${request.get('host')}/tour/${tour.slug}?alert=error`,
+        success_url: `${request.protocol}://${request.get('host')}/booking/checkout-complete/${request.params.tourId}/u_id/${request.user.id}/conf/${conf}`,
+        cancel_url: `${request.protocol}://${request.get('host')}/tour/${tour.slug}?alert=error`,
         customer_email: request.user.email,
         client_reference_id: request.params.tourId,
         line_items: [
@@ -44,40 +63,47 @@ exports.getCheckoutSession = catchAsyncErrors(async (request, response, next) =>
 
 exports.createBookingCheckout = catchAsyncErrors(async (request, response, next) => {
 
-    //console.log(request.user);
-
     try {
 
-//        const t_id = request.params.t_id;
-//        const u_id = request.params.u_id;
+        const {t_id, u_id, conf} = request.params;
 
-        const { t_id, u_id } = request.params;
-
-        console.log("t_id: ", t_id);
-        console.log("u_id: ", u_id);
-
-
-        if (!t_id && !u_id) {
+        if (!t_id || !u_id) {
             throw "An unexpected error has occurred. Unable to book tour";
+        }
+
+        //Re-create confirmation code for added security
+        const conf_test = crypto
+                .createHash('sha256')
+                .update(t_id + u_id + getBookingDateString())
+                .digest('hex')
+                .slice(0, 10);
+
+        if (conf !== conf_test) {
+            throw "An unexpected validation error has occurred. Unable to complete booking process";
         }
 
         const tour = await Tour.findById(t_id);
         const user = await User.findById(u_id);
 
-        console.log("tour: ", tour);
-        console.log("user: ", user);
-
-        if (!tour || !user){
-            throw "An unexpected error has occurred. Unable to book tour";
+        if (!tour || !user) {
+            throw "An unexpected error has occurred. Unable to complete booking process";
         }
 
-        await Booking.create({ tour: tour.id, user: user.id, price: tour.price });
+        //Save the booking locally
+        await Booking.create({tour: tour.id, user: user.id, price: tour.price, confirmation: conf});
 
-        //Redirect back to the homepage without the query string
-        //response.redirect(request.originalUrl.split('?')[0]);
-        response.redirect('/my-tours?alert=booking');
-    }
-    catch (e){
+        const url = `${request.protocol}://${request.get('host')}/my-tours`;
+
+        await (new Email(user, url))
+                .sendBookingConfirmation({
+                    tourName: tour.name,
+                    tourPrice: tour.price.toLocaleString('en-US'),
+                    confirmationCode: conf
+                });
+
+        //Redirect back to the bookings page with a confirmation message
+        response.redirect('/my-tours?alert=booking&confirmation=' + conf);
+    } catch (e) {
         response.status(500).json({
             status: 'error',
             message: e
@@ -85,6 +111,9 @@ exports.createBookingCheckout = catchAsyncErrors(async (request, response, next)
     }
 });
 
+/**
+ * CRUD Operations
+ */
 exports.createBooking = factory.createDocument(Booking);
 exports.getAllBookings = factory.getAllDocuments(Booking);
 exports.getBookingById = factory.getDocument(Booking);

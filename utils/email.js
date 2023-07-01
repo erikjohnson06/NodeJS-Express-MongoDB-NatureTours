@@ -16,19 +16,6 @@ module.exports = class Email {
      */
     newTransport(){
 
-        /*
-        if (process.env.NODE_ENV === 'production'){
-            //Sendgrid transporter
-            return nodemailer.createTransport({
-                service: 'SendGrid',
-                auth: {
-                    user: process.env.SENDGRID_USERNAME,
-                    pass: process.env.SENDGRID_PASSWORD,
-                }
-            });
-        }
-        */
-       
         return nodemailer.createTransport({
             host: process.env.MAIL_HOST,
             port: process.env.MAIL_PORT,
@@ -40,18 +27,20 @@ module.exports = class Email {
     }
 
     /**
-     * @param {type} template
-     * @param {type} subject
+     * @param {String} template
+     * @param {String} subject
+     * @param {mixed} data
      * @returns {void}
      */
-    async send(template, subject) {
+    async send(template, subject, data) {
 
         //Render HTML template
         const html = pug.renderFile(`${__dirname}/../views/emails/${template}.pug`,
             {
                 firstName: this.firstName,
                 url: this.url,
-                subject: subject
+                subject: subject,
+                data : data
             }
         );
 
@@ -75,30 +64,8 @@ module.exports = class Email {
     async sendPasswordReset(){
         await this.send('passwordReset', 'Reset Your Password');
     }
+
+    async sendBookingConfirmation(data){
+        await this.send('booking', 'Your Booking Confirmation', data);
+    }
 };
-
-//const sendEmail = async (options) => {
-
-    //Create transporter
-//    const transporter = nodemailer.createTransport({
-//        host: process.env.MAIL_HOST,
-//        port: process.env.MAIL_PORT,
-//        auth: {
-//          user: process.env.MAIL_USERNAME,
-//          pass: process.env.MAIL_PASSWORD
-//        }
-//    });
-
-//    //Define email options
-//    const mailOptions = {
-//        from: process.env.MAIL_FROM_ADDRESS,
-//        to: options.email,
-//        subject: options.subject,
-//        text: options.message
-//    };
-
-//    //Send
-//    await transporter.sendMail(mailOptions);
-//};
-
-//module.exports = sendEmail;

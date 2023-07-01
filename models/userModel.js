@@ -8,14 +8,21 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Name is required'],
         maxlength: [50, 'Names are limited to 50 characters'],
-        minlength: [1, 'Invalid name']
+        minlength: [1, 'Invalid name'],
+        validate: {
+            validator: function (el) {
+                return /[^A-Za-z\s]/.test(el);
+            },
+            message: "Invalid name"
+        }
     },
     email: {
         type: String,
         required: [true, 'Email is required'],
         unique: true,
         lowercase: true,
-        maxlength: [250, 'Email addresses are limited to 250 characters'],
+        maxlength: [50, 'Email addresses are limited to 50 characters'],
+        minlength: [1, 'Invalid email address'],
         validate: [validator.isEmail, 'Invalid email address']
     },
     role: {

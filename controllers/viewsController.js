@@ -45,6 +45,14 @@ exports.getLoginForm = (request, response) => {
         });
 };
 
+exports.getRegistrationForm = (request, response) => {
+    response
+        .status(200)
+        .render('register', {
+            title: 'Create an Account'
+        });
+};
+
 exports.getAccount = (request, response) => {
 
     response.status(200).render('account', {
@@ -94,6 +102,10 @@ exports.alerts = (request, response, next) => {
         switch (alert){
             case 'booking':
                 response.locals.alert = 'Booking was successful! An order confirmation has been sent to your email.';
+
+                if (request.query.confirmation){
+                    response.locals.alert += ' Order Confirmation: ' + request.query.confirmation;
+                }
                 break;
             case 'error':
                 response.locals.alert = 'Hmm.. Something went wrong. If this issue persists, please contact an administrator.';

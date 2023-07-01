@@ -13,14 +13,13 @@ export const login = async (email, password) => {
             }
         });
 
-        if (result.data.status === 'success'){
-            displayAlert('success','Logged in successfully!');
+        if (result.data.status === 'success') {
+            displayAlert('success', 'Logged in successfully!');
             window.setTimeout(() => {
                 location.assign('/');
             }, 1500);
         }
-    }
-    catch (e){
+    } catch (e) {
         displayAlert('error', e.response.data.message);
     }
 };
@@ -34,11 +33,15 @@ export const logout = async () => {
             url: '/api/v1/users/logout'
         });
 
-        if (result.data.status === 'success'){
-            location.reload(true); //'true' required here to force reload from server vs cache
+        console.log(result.data);
+
+        if (result.data.status === 'success') {
+            //location.reload(true); //'true' required here to force reload from server vs cache
+            window.setTimeout(() => {
+                location.assign('/');
+            }, 1500);
         }
-    }
-    catch(e){
+    } catch (e) {
         displayAlert('error', 'An error occurred logging out. Please try again. ');
     }
 };

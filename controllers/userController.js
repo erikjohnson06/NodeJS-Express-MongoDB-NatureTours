@@ -7,16 +7,6 @@ const catchAsyncErrors = require('../utils/catchAsyncErrors');
 const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
 
-//const multerStorage = multer.diskStorage({
-//    destination: (request, file, callback) => {
-//        callback(null, 'public/img/users');
-//    },
-//    filename: (request, file, callback) => {
-//        const ext = file.mimetype.split('/')[1];
-//        callback(null, `user-${request.user.id}-${Date.now()}.${ext}`);
-//    }
-//});
-
 const multerStorage = multer.memoryStorage();
 
 const multerFilter = (request, file, callback) => {
@@ -34,7 +24,7 @@ const imageUpload = multer({
 
 exports.resizeUserImage = catchAsyncErrors(async (request, response, next) => {
 
-    if (!request.file){
+    if (!request.file) {
         return next();
     }
 
@@ -50,9 +40,8 @@ exports.resizeUserImage = catchAsyncErrors(async (request, response, next) => {
 });
 
 /**
- *
- * @param {type} obj
- * @param {type} allowedFields
+ * @param {Object} obj
+ * @param {Array} allowedFields
  * @returns {Object}
  */
 filterObject = (obj, ...allowedFields) => {
@@ -116,6 +105,9 @@ exports.getCurrentUser = (request, response, next) => {
     next();
 };
 
+/**
+ * CRUD Operations
+ */
 exports.getAllUsers = factory.getAllDocuments(User);
 exports.getUserById = factory.getDocument(User);
 exports.updateUserById = factory.updateDocument(User);

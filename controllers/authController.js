@@ -8,7 +8,7 @@ const AppError = require('../utils/appError');
 
 /**
  * Create new JSON Web Token
- * JWT Ref: https://github.com/auth0/node-jsonwebtoken
+ * JWT Reference: https://github.com/auth0/node-jsonwebtoken
  *
  * @param {string} id
  * @return {void}
@@ -32,47 +32,68 @@ const createToken = id => {
  */
 const createAndSendToken = (user, message, statusCode, request, response) => {
 
-    const token = createToken(user._id);
+    try {
 
-    const cookieOptions = {
-        expires: new Date(Date.now() + (process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000)), //Set expiration to 90 days
-        httpOnly: true,
-        //Secure property will only work using HTTPS protocol.
-        secure: (request.secure || request.headers['x-forwarded-proto'] === 'https')
-    };
+        const token = createToken(user._id);
 
-    response.cookie('jwt', token, cookieOptions);
+        const cookieOptions = {
+            expires: new Date(Date.now() + (process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000)), //Set expiration to 90 days
+            httpOnly: true,
+            //Secure property will only work using HTTPS protocol.
+            secure: (request.secure || request.headers['x-forwarded-proto'] === 'https')
+        };
 
-    //Unset the password in the response object
-    if (user.password){
-        user.password = undefined;
-    }
+        response.cookie('jwt', token, cookieOptions);
 
-    response.status(statusCode).json({
-        status: 'success',
-        message: message,
-        token,
-        data: {
-            user: user
+        //Unset the password in the response object
+        if (user.password) {
+            user.password = undefined;
         }
-    });
 
+        response.status(statusCode).json({
+            status: 'success',
+            message: message,
+            token,
+            data: {
+                user: user
+            }
+        });
+    } catch (e) {
+        response.status(500).json({
+            status: 'error',
+            message: e
+        });
+    }
 };
 
 exports.signup = catchAsyncErrors(async(request, response, next) => {
 
-    const newUser = await User.create({
-        name: request.body.name,
-        email: request.body.email,
-        password: request.body.password,
-        passwordConfirm: request.body.passwordConfirm,
-        passwordLastUpdated: request.body.passwordLastUpdated
-    });
+    console.log(request.body);
 
-    const url = `${request.protocol}://${request.get('host')}/account`;
-    await new Email(newUser, url).sendWelcome();
+    try {
 
-    createAndSendToken(newUser, "User Created Successfully", 201, request, response);
+        const newUser = await User.create({
+            name: request.body.name,
+            email: request.body.email,
+            password: request.body.password,
+            passwordConfirm: request.body.passwordConfirm,
+            passwordLastUpdated: request.body.passwordLastUpdated
+        });
+
+        const url = `${request.protocol}://${request.get('host')}/account`;
+        await (new Email(newUser, url)).sendWelcome();
+
+        //createAndSendToken(newUser, "Account Created Successfully", 201, request, response);
+        response.status(200).json({
+            status: 'success'
+        });
+    }
+    catch (e){
+        response.status(200).json({
+            status: 'error',
+            message: e
+        });
+    }
 });
 
 exports.login = catchAsyncErrors(async(request, response, next) => {
@@ -113,8 +134,7 @@ exports.protected = catchAsyncErrors(async(request, response, next) => {
     //Check if token exists
     if (request.headers.authorization && request.headers.authorization.startsWith('Bearer')) {
         token = request.headers.authorization.split(' ')[1];
-    }
-    else if (request.cookies.jwt){
+    } else if (request.cookies.jwt) {
         token = request.cookies.jwt;
     }
 
@@ -137,7 +157,7 @@ exports.protected = catchAsyncErrors(async(request, response, next) => {
         return next(new AppError('Invalid token.', 401));
     }
 
-    //Proceed to protected route
+    //Save user to request object
     request.user = currentUser;
     response.locals.user = currentUser;
     next();
@@ -149,7 +169,7 @@ exports.protected = catchAsyncErrors(async(request, response, next) => {
 exports.isLoggedIn = async(request, response, next) => {
 
     //Check if token exists
-    if (request.cookies.jwt){
+    if (request.cookies.jwt) {
 
         try {
 
@@ -171,8 +191,7 @@ exports.isLoggedIn = async(request, response, next) => {
             //Proceed to protected route
             response.locals.user = currentUser;
             return next();
-        }
-        catch (e){
+        } catch (e) {
             return next();
         }
     }
@@ -180,11 +199,15 @@ exports.isLoggedIn = async(request, response, next) => {
     next();
 };
 
+/**
+ * @param {Array} roles Ex: ['admin', 'guide']
+ *
+ * @returns {Function}
+ */
 exports.restrictTo = (...roles) => {
 
     return (request, response, next) => {
 
-        //roles: ['admin', 'user']
         if (!roles.includes(request.user.role)) {
             return next(new AppError('Insufficient permission to perform this action.', 403));
         }
@@ -217,9 +240,9 @@ exports.forgotPassword = catchAsyncErrors(async(request, response, next) => {
         const message = `Forgot your password? Reset here: ${resetURL}`;
 
         await new Email(
-            user,
-            resetURL
-        ).sendPasswordReset();
+                user,
+                resetURL
+                ).sendPasswordReset();
 
         response.status(200).json({
             status: 'success',
