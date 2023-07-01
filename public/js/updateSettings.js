@@ -12,8 +12,8 @@ export const updateSettings = async (data, type) => {
     try {
 
         const url = (type === 'password') ?
-            '/api/v1/users/updatePassword' :
-            '/api/v1/users/updateUserData';
+                '/api/v1/users/updatePassword' :
+                '/api/v1/users/updateUserData';
 
         const result = await axios({
             method: 'PATCH',
@@ -21,11 +21,10 @@ export const updateSettings = async (data, type) => {
             data: data
         });
 
-        if (result.data.status === 'success'){
-            displayAlert('success',`${type.toUpperCase()} updated successfully`);
+        if (result.data.status === 'success') {
+            displayAlert('success', `${type.toUpperCase()} updated successfully`);
         }
-    }
-    catch (e){
+    } catch (e) {
         displayAlert('error', e.response.data.message);
     }
 };

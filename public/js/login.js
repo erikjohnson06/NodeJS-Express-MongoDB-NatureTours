@@ -33,10 +33,8 @@ export const logout = async () => {
             url: '/api/v1/users/logout'
         });
 
-        console.log(result.data);
-
         if (result.data.status === 'success') {
-            //location.reload(true); //'true' required here to force reload from server vs cache
+
             window.setTimeout(() => {
                 location.assign('/');
             }, 1500);

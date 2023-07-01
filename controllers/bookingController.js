@@ -94,12 +94,15 @@ exports.createBookingCheckout = catchAsyncErrors(async (request, response, next)
 
         const url = `${request.protocol}://${request.get('host')}/my-tours`;
 
-        await (new Email(user, url))
-                .sendBookingConfirmation({
+        await (new Email(
+                user,
+                url,
+                {
                     tourName: tour.name,
                     tourPrice: tour.price.toLocaleString('en-US'),
                     confirmationCode: conf
-                });
+                }))
+                .sendBookingConfirmation();
 
         //Redirect back to the bookings page with a confirmation message
         response.redirect('/my-tours?alert=booking&confirmation=' + conf);

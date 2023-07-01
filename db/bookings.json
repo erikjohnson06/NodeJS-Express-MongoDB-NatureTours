@@ -1,0 +1,103 @@
+[{
+  "_id": {
+    "$oid": "649f3632c04c98e0f7162a20"
+  },
+  "tour": {
+    "$oid": "5c88fa8cf4afda39709c2955"
+  },
+  "user": {
+    "$oid": "5c8a1dfa2f8fb814b56fa181"
+  },
+  "confirmation": "52f0a24b69",
+  "price": 497,
+  "createdAt": {
+    "$date": "2023-06-30T20:04:26.482Z"
+  },
+  "paid": true,
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "649f373c28fc4d21a92f5071"
+  },
+  "tour": {
+    "$oid": "5c88fa8cf4afda39709c2955"
+  },
+  "user": {
+    "$oid": "5c8a1dfa2f8fb814b56fa181"
+  },
+  "confirmation": "52f0a24b69",
+  "price": 497,
+  "createdAt": {
+    "$date": "2023-06-30T20:12:36.308Z"
+  },
+  "paid": true,
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "649f37c5ef920c21409d31de"
+  },
+  "tour": {
+    "$oid": "5c88fa8cf4afda39709c2955"
+  },
+  "user": {
+    "$oid": "5c8a1dfa2f8fb814b56fa181"
+  },
+  "confirmation": "52f0a24b69",
+  "price": 497,
+  "createdAt": {
+    "$date": "2023-06-30T20:14:53.316Z"
+  },
+  "paid": true,
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "649f37fe4d84c732750731c5"
+  },
+  "tour": {
+    "$oid": "5c88fa8cf4afda39709c2955"
+  },
+  "user": {
+    "$oid": "5c8a1dfa2f8fb814b56fa181"
+  },
+  "confirmation": "52f0a24b69",
+  "price": 497,
+  "createdAt": {
+    "$date": "2023-06-30T20:15:49.793Z"
+  },
+  "paid": true,
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "649f384ed50c8eb0d770eaaa"
+  },
+  "tour": {
+    "$oid": "5c88fa8cf4afda39709c2955"
+  },
+  "user": {
+    "$oid": "5c8a1dfa2f8fb814b56fa181"
+  },
+  "confirmation": "52f0a24b69",
+  "price": 497,
+  "createdAt": {
+    "$date": "2023-06-30T20:17:03.652Z"
+  },
+  "paid": true,
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "649f399a5bde0298dfaefda9"
+  },
+  "tour": {
+    "$oid": "5c88fa8cf4afda39709c2955"
+  },
+  "user": {
+    "$oid": "5c8a1dfa2f8fb814b56fa181"
+  },
+  "confirmation": "52f0a24b69",
+  "price": 497,
+  "createdAt": {
+    "$date": "2023-06-30T20:20:55.072Z"
+  },
+  "paid": true,
+  "__v": 0
+}]

@@ -68,8 +68,6 @@ const createAndSendToken = (user, message, statusCode, request, response) => {
 
 exports.signup = catchAsyncErrors(async(request, response, next) => {
 
-    console.log(request.body);
-
     try {
 
         const newUser = await User.create({

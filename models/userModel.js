@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
         minlength: [1, 'Invalid name'],
         validate: {
             validator: function (el) {
-                return /[^A-Za-z\s]/.test(el);
+                return /^[A-Za-z\s]+$/.test(el); //Require alpha characters only
             },
             message: "Invalid name"
         }

@@ -1,0 +1,221 @@
+[{
+  "_id": {
+    "$oid": "5c8a1d5b0190b214360dc057"
+  },
+  "name": "Erik Johnson",
+  "email": "admin@naturetours.com",
+  "role": "admin",
+  "image": "user-5c8a1d5b0190b214360dc057-1688238539455.jpeg",
+  "active": true,
+  "password": "$2a$12$rfDuRQijQCw0/Se81BOBVeaR9nJ3Eb2b.j4poogOQvQNd8IqgoxGa",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a1dfa2f8fb814b56fa181"
+  },
+  "name": "Laura Browning",
+  "email": "laura@email.com",
+  "role": "user",
+  "image": "user-5c8a1dfa2f8fb814b56fa181-1688239024606.jpeg",
+  "active": true,
+  "password": "$2a$12$rfDuRQijQCw0/Se81BOBVeaR9nJ3Eb2b.j4poogOQvQNd8IqgoxGa",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a1e1a2f8fb814b56fa182"
+  },
+  "name": "Sophie Jones",
+  "email": "sophie@email.com",
+  "role": "user",
+  "image": "user-5c8a1e1a2f8fb814b56fa182-1688239159787.jpeg",
+  "active": true,
+  "password": "$2a$12$rfDuRQijQCw0/Se81BOBVeaR9nJ3Eb2b.j4poogOQvQNd8IqgoxGa",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a1ec62f8fb814b56fa183"
+  },
+  "name": "Melissa Cornell",
+  "email": "melissa@email.com",
+  "role": "user",
+  "image": "user-5c8a1ec62f8fb814b56fa183-1688239318673.jpeg",
+  "active": true,
+  "password": "$2a$12$rfDuRQijQCw0/Se81BOBVeaR9nJ3Eb2b.j4poogOQvQNd8IqgoxGa",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a1f292f8fb814b56fa184"
+  },
+  "name": "Jacob Smith",
+  "email": "jacob@email.com",
+  "role": "guide",
+  "image": "user-5c8a1f292f8fb814b56fa184-1688239427380.jpeg",
+  "active": true,
+  "password": "$2a$12$rfDuRQijQCw0/Se81BOBVeaR9nJ3Eb2b.j4poogOQvQNd8IqgoxGa",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a1f4e2f8fb814b56fa185"
+  },
+  "name": "Jennifer Hardy",
+  "email": "jennifer@email.com",
+  "role": "guide",
+  "image": "user-5c8a1f4e2f8fb814b56fa185-1688239505317.jpeg",
+  "active": true,
+  "password": "$2a$12$rfDuRQijQCw0/Se81BOBVeaR9nJ3Eb2b.j4poogOQvQNd8IqgoxGa",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a201e2f8fb814b56fa186"
+  },
+  "name": "Kate Morrison",
+  "email": "kate@email.com",
+  "role": "guide",
+  "image": "user-5c8a201e2f8fb814b56fa186-1688239587009.jpeg",
+  "active": true,
+  "password": "$2a$12$rfDuRQijQCw0/Se81BOBVeaR9nJ3Eb2b.j4poogOQvQNd8IqgoxGa",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a20d32f8fb814b56fa187"
+  },
+  "name": "Amy Stout",
+  "email": "amy@email.com",
+  "role": "user",
+  "image": "user-5c8a20d32f8fb814b56fa187-1688239688881.jpeg",
+  "active": true,
+  "password": "$2a$12$rfDuRQijQCw0/Se81BOBVeaR9nJ3Eb2b.j4poogOQvQNd8IqgoxGa",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a211f2f8fb814b56fa188"
+  },
+  "name": "Sanghoon Park",
+  "email": "sanghoon@email.com",
+  "role": "user",
+  "image": "user-5c8a211f2f8fb814b56fa188-1688239796162.jpeg",
+  "active": true,
+  "password": "$2a$12$rfDuRQijQCw0/Se81BOBVeaR9nJ3Eb2b.j4poogOQvQNd8IqgoxGa",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a21d02f8fb814b56fa189"
+  },
+  "name": "Steve Sanders",
+  "email": "steve@email.com",
+  "role": "lead-guide",
+  "image": "user-5c8a21d02f8fb814b56fa189-1688239892787.jpeg",
+  "active": true,
+  "password": "$2a$12$rfDuRQijQCw0/Se81BOBVeaR9nJ3Eb2b.j4poogOQvQNd8IqgoxGa",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a21f22f8fb814b56fa18a"
+  },
+  "name": "Aaron Bowman",
+  "email": "aaron@example.com",
+  "role": "lead-guide",
+  "image": "user-5c8a21f22f8fb814b56fa18a-1688239977442.jpeg",
+  "active": true,
+  "password": "$2a$12$rfDuRQijQCw0/Se81BOBVeaR9nJ3Eb2b.j4poogOQvQNd8IqgoxGa",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a22c62f8fb814b56fa18b"
+  },
+  "name": "Mike Gardner",
+  "email": "mike@example.com",
+  "role": "lead-guide",
+  "image": "user-5c8a22c62f8fb814b56fa18b-1688240082923.jpeg",
+  "active": true,
+  "password": "$2a$12$rfDuRQijQCw0/Se81BOBVeaR9nJ3Eb2b.j4poogOQvQNd8IqgoxGa",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a23c82f8fb814b56fa18d"
+  },
+  "name": "Lisa Wilson",
+  "email": "lisa @example.com",
+  "role": "user",
+  "image": "default.jpg",
+  "active": true,
+  "password": "$2a$12$WPxigAps6UkcKrrk7gIot.5ELNWuXlQxWnw/2Sp4.m0CE3XQjHneq",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a24282f8fb814b56fa18f"
+  },
+  "name": "Isabel Kirkland",
+  "email": "isabel@email.com",
+  "role": "user",
+  "image": "default.jpg",
+  "active": true,
+  "password": "$2a$12$sZgsM04Rh3aQ.QaTUq54seSTT51BYlv0UIrtHiQ0VF4G9t4w.RFLq",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a24402f8fb814b56fa190"
+  },
+  "name": "Alexander Jones",
+  "email": "alex@email.com",
+  "role": "user",
+  "image": "default.jpg",
+  "active": true,
+  "password": "$2a$12$KY5GB1zSrgTaM0yPYhTFledxD5uGA31fqERXIA4kiMVriLUDgyLNq",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a24822f8fb814b56fa192"
+  },
+  "name": "John Riley",
+  "email": "john@email.com",
+  "role": "user",
+  "image": "default.jpg",
+  "active": true,
+  "password": "$2a$12$CoYHITeUj4WflgUtLzC7JOSpVs5dhoMUR5Uw0OH5RVS/VBOck2/ea",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a24a02f8fb814b56fa193"
+  },
+  "name": "Samantha Brown",
+  "email": "samantha@example.com",
+  "role": "user",
+  "image": "default.jpg",
+  "active": true,
+  "password": "$2a$12$YHPqJ6YvMwy5MkorVqUAEOXtht9G6qHPtOwg6na33mxHaZYJlqVCO",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a23412f8fb814b56fa18c"
+  },
+  "name": "Ben Hadley",
+  "email": "ben@email.com",
+  "role": "guide",
+  "image": "user-5c8a23412f8fb814b56fa18c-1688240150189.jpeg",
+  "active": true,
+  "password": "$2a$12$rfDuRQijQCw0/Se81BOBVeaR9nJ3Eb2b.j4poogOQvQNd8IqgoxGa",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a245f2f8fb814b56fa191"
+  },
+  "name": "Ed Hernandez",
+  "email": "ed@email.com",
+  "role": "user",
+  "image": "default.jpg",
+  "active": true,
+  "password": "$2a$12$9iQIiz.oCXe/iy8rYs1BW.vLRpJmWQG6fZoWPGA9BL4hO41GzJ2Le",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5c8a23de2f8fb814b56fa18e"
+  },
+  "name": "Max Smith",
+  "email": "max@email.com",
+  "role": "user",
+  "image": "default.jpg",
+  "active": true,
+  "password": "$2a$12$DQvmOF2pxQgz/2ef8ryoFO5Fu2K0notupU5ZTndluO8G/25NswrM2",
+  "__v": 0
+}]

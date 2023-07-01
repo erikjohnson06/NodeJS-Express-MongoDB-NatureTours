@@ -4,24 +4,32 @@ const htmlToText = require('html-to-text');
 
 module.exports = class Email {
 
-    constructor(user, url){
+    /**
+     *
+     * @param {Object} user
+     * @param {String} url
+     * @param {Object} data
+     * @returns {nm$_email.Email}
+     */
+    constructor(user, url, data) {
         this.to = user.email;
         this.firstName = user.name.split(' ')[0];
         this.url = url;
         this.from = `Nature Tours <${process.env.MAIL_FROM_ADDRESS}>`;
+        this.data = data;
     }
 
     /**
      * @returns {Module.exports.createTransport.mailer}
      */
-    newTransport(){
+    newTransport() {
 
         return nodemailer.createTransport({
             host: process.env.MAIL_HOST,
             port: process.env.MAIL_PORT,
             auth: {
-              user: process.env.MAIL_USERNAME,
-              pass: process.env.MAIL_PASSWORD
+                user: process.env.MAIL_USERNAME,
+                pass: process.env.MAIL_PASSWORD
             }
         });
     }
@@ -29,19 +37,18 @@ module.exports = class Email {
     /**
      * @param {String} template
      * @param {String} subject
-     * @param {mixed} data
      * @returns {void}
      */
-    async send(template, subject, data) {
+    async send(template, subject) {
 
         //Render HTML template
         const html = pug.renderFile(`${__dirname}/../views/emails/${template}.pug`,
-            {
-                firstName: this.firstName,
-                url: this.url,
-                subject: subject,
-                data : data
-            }
+                {
+                    firstName: this.firstName,
+                    url: this.url,
+                    subject: subject,
+                    data: this.data
+                }
         );
 
         //Define email options
@@ -57,15 +64,15 @@ module.exports = class Email {
         await this.newTransport().sendMail(mailOptions);
     }
 
-    async sendWelcome(){
+    async sendWelcome() {
         await this.send('welcome', 'Welcome to Nature Tours!');
     }
 
-    async sendPasswordReset(){
+    async sendPasswordReset() {
         await this.send('passwordReset', 'Reset Your Password');
     }
 
-    async sendBookingConfirmation(data){
-        await this.send('booking', 'Your Booking Confirmation', data);
+    async sendBookingConfirmation() {
+        await this.send('booking', 'Your Booking Confirmation');
     }
 };

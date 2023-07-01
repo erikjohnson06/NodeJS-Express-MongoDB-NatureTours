@@ -1,4 +1,7 @@
 
+/**
+ * Class to work with Mongo DB query results
+ */
 class APIFeatures {
 
     /**
@@ -7,7 +10,7 @@ class APIFeatures {
      * @param {Object} queryString
      * @returns {nm$_APIFeatures.APIFeatures}
      */
-    constructor(query, queryString){
+    constructor(query, queryString) {
         this.query = query;
         this.queryString = queryString;
     }
@@ -17,9 +20,9 @@ class APIFeatures {
      *
      * @returns {nm$_APIFeatures.APIFeatures}
      */
-    filter(){
+    filter() {
 
-       //Ex: duration[gte]=5&difficulty=easy&limit=10
+        //Ex: duration[gte]=5&difficulty=easy&limit=10
         const queryObj = {...this.queryString}; //Creates clone of object
         const excludedFields = ['page', 'sort', 'limit', 'fields'];
 
@@ -41,7 +44,7 @@ class APIFeatures {
      *
      * @returns {nm$_APIFeatures.APIFeatures}
      */
-    sort(){
+    sort() {
 
         //Ex: sort=price (ASC), sort=-price (DESC), sort=price,duration (Multiple criteria)
         if (this.queryString.sort) {
@@ -61,7 +64,7 @@ class APIFeatures {
      *
      * @returns {nm$_APIFeatures.APIFeatures}
      */
-    selectFields(){
+    selectFields() {
 
         //Ex: fields=duration,price,name
         if (this.queryString.fields) {
@@ -81,12 +84,12 @@ class APIFeatures {
      *
      * @returns {nm$_APIFeatures.APIFeatures}
      */
-    pagination(){
+    pagination() {
 
         //Ex: page=2&limit=10
         const page = (parseInt(this.queryString.page)) || 1;
         const limit = (parseInt(this.queryString.limit)) || 100; //Default to 100 results returned
-        const skip = ((page - 1 ) * limit);
+        const skip = ((page - 1) * limit);
 
         this.query = this.query.skip(skip).limit(limit);
 

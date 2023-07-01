@@ -5,7 +5,7 @@ export const displayAlert = (type, msg, time) => {
     const html = `<div class="alert alert--${type}">${msg}</div>`;
     document.querySelector('body').insertAdjacentHTML('afterbegin', html);
 
-    if (!time || typeof time === "undefined"){
+    if (!time || typeof time === "undefined") {
         time = 5; //Default to 5 seconds
     }
 
@@ -15,7 +15,7 @@ export const displayAlert = (type, msg, time) => {
 export const hideAlert = () => {
     const el = document.querySelector('.alert');
 
-    if (el){
+    if (el) {
         el.parentElement.removeChild(el);
     }
 };

@@ -20,12 +20,12 @@ const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const alertMessage = document.querySelector('body').dataset.alert;
 
-if (mapBox){
+if (mapBox) {
     const locations = JSON.parse(mapBox.dataset.locations);
     displayMap(locations);
 }
 
-if (bookTourBtn){
+if (bookTourBtn) {
 
     bookTourBtn.addEventListener('click', e => {
 
@@ -37,7 +37,7 @@ if (bookTourBtn){
     });
 }
 
-if (loginForm){
+if (loginForm) {
 
     loginForm.addEventListener('submit', e => {
         e.preventDefault();
@@ -49,12 +49,12 @@ if (loginForm){
     });
 }
 
-if (logoutBtn){
+if (logoutBtn) {
     logoutBtn.addEventListener('click', logout);
 }
 
 
-if (registerForm){
+if (registerForm) {
 
     registerForm.addEventListener('submit', e => {
         e.preventDefault();
@@ -71,7 +71,7 @@ if (registerForm){
     });
 }
 
-if (userDataForm){
+if (userDataForm) {
     userDataForm.addEventListener('submit', e => {
         e.preventDefault();
 
@@ -84,7 +84,7 @@ if (userDataForm){
     });
 }
 
-if (userPasswordForm){
+if (userPasswordForm) {
     userPasswordForm.addEventListener('submit', async e => {
         e.preventDefault();
 
@@ -105,6 +105,6 @@ if (userPasswordForm){
 }
 
 
-if (alertMessage){
+if (alertMessage) {
     displayAlert('success', alertMessage, 20);
 }

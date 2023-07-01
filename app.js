@@ -11,6 +11,7 @@ const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const cors = require('cors');
 
+//Load routers
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
@@ -46,13 +47,13 @@ app.options('*', cors());
 app.use(helmet({
     contentSecurityPolicy: {
         directives: {
-            "default-src" : ["'self'", "blob:", "localhost:3000", "ws:"],
-            "connect-src" : ["'self'", "localhost:3000", "ws://localhost:*/",  "https://api.mapbox.com/", "https://events.mapbox.com/"],
-            "worker-src" : ["'self'", "blob:"],
+            "default-src": ["'self'", "blob:", "localhost:3000", "ws:"],
+            "connect-src": ["'self'", "localhost:3000", "ws://localhost:*/", "https://api.mapbox.com/", "https://events.mapbox.com/"],
+            "worker-src": ["'self'", "blob:"],
             "script-src": ["'self'", "blob:", "localhost:3000", "https://cdnjs.cloudflare.com/", "https://*.tiles.mapbox.com/", "https://api.mapbox.com/", "https://events.mapbox.com/", "https://js.stripe.com/v3/"],
             "style-src": ["'self'", "https://fonts.googleapis.com/", "https://api.mapbox.com/", "https://*.tiles.mapbox.com/", "'unsafe-inline'"],
             "font-src": ["'self'", "https://fonts.googleapis.com/", "https://fonts.gstatic.com/"],
-            "frame-src" : ["https://*.stripe.com/"]
+            "frame-src": ["https://*.stripe.com/"]
         }
     }
 }));
@@ -72,7 +73,7 @@ app.use(express.json({
 }));
 
 //Parse data from URL encoded form
-app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+app.use(express.urlencoded({extended: true, limit: '10kb'}));
 
 app.use(cookieParser());
 
@@ -95,7 +96,8 @@ app.use(hpp({
     ]
 }));
 
-app.use(compression()); //Compress HTTP Responses
+//Compress HTTP Responses
+app.use(compression());
 
 //Test middleware
 app.use((request, response, next) => {
@@ -103,7 +105,7 @@ app.use((request, response, next) => {
     next();
 });
 
-//ROUTES
+//Define Routes
 app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);

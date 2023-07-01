@@ -45,15 +45,6 @@ reviewSchema.index(
 //Remove certain fields from user object when populating reference
 reviewSchema.pre(/^find/, function (next) {
 
-//    this.populate({
-//        path: 'user',
-//        select: 'name '
-//    })
-//        .populate({
-//        path: 'tour',
-//        select: 'name image'
-//    });
-
     this.populate({
         path: 'user',
         select: 'name image'
@@ -109,8 +100,6 @@ reviewSchema.statics.calculateAverageRating = async function (tourId) {
 reviewSchema.post('save', function () {
     this.constructor.calculateAverageRating(this.tour);
 });
-
-
 
 const Review = mongoose.model('Review', reviewSchema);
 

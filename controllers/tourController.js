@@ -63,24 +63,6 @@ exports.resizeTourImages = catchAsyncErrors(async (request, response, next) => {
     next();
 });
 
-////Middleware to ensure a tour id is valid
-//exports.checkId = (request, response, next, val) => {
-//
-//    const id = parseInt(request.params.id);
-////    const tour = tours.find(el => el.id === id);
-//
-////    if (!tour) {
-////        return response
-////                .status(404)
-////                .json({
-////                    status: "error",
-////                    message: "Invalid ID"
-////                });
-////    }
-//
-//    next();
-//};
-
 //Middleware to account for 'top-5-bargain-tours' route alias
 exports.aliasTopBargainTours = (request, response, next) => {
     request.query.limit = '5';

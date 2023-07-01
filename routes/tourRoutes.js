@@ -15,7 +15,7 @@ router.route('/monthly-plan/:year')
                 authController.protected,
                 authController.restrictTo('admin', 'lead-guide', 'guide'),
                 tourController.getMonthlyPlan
-                );
+        );
 
 router.route('/tours-within/:distance/center/:latlong/unit/:unit')
         .get(tourController.getToursWithinDistance);
@@ -29,7 +29,7 @@ router.route('/')
                 authController.protected,
                 authController.restrictTo('admin', 'lead-guide'),
                 tourController.createTour
-                );
+        );
 
 router.route('/:id')
         .get(tourController.getTourById)
@@ -43,7 +43,7 @@ router.route('/:id')
                 authController.protected,
                 authController.restrictTo('admin', 'lead-guide'),
                 tourController.deleteTourById
-                );
+        );
 
 //Redirect to Review Router: GET /tour/123456/reviews
 router.use('/:tourId/reviews', reviewRouter);
