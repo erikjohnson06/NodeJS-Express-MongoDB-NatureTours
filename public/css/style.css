@@ -675,6 +675,10 @@ body {
     fill: #bbb;
 }
 
+.add-review {
+    background-color: #f7f7f7;
+}
+
 .section-cta {
     margin-top: calc(0px - var(--section-rotate));
     padding: 3rem;
@@ -1223,7 +1227,8 @@ body {
 }
 
 .login-form,
-.register-form {
+.register-form,
+.review-form {
     margin: 0 auto;
     max-width: 55rem;
     background-color: #fff;

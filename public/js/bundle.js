@@ -12153,9 +12153,10 @@ var register = /*#__PURE__*/function () {
         case 32:
           throw "Whoops.. an unexpected error has occurred.";
         case 33:
+          //Redirect to login page
           (0, _alerts.displayAlert)('success', 'Account Created successfully!');
           window.setTimeout(function () {
-            location.assign('/');
+            location.assign('/login');
           }, 1500);
           _context.next = 40;
           break;
@@ -12495,6 +12496,7 @@ if (mapBox) {
 if (bookTourBtn) {
   bookTourBtn.addEventListener('click', function (e) {
     e.target.textContent = 'Processing...';
+    e.target.disabled = true;
     var tourId = e.target.dataset.tourId;
     (0, _stripe.bookTour)(tourId);
   });

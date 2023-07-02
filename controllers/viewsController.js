@@ -29,11 +29,33 @@ exports.getTourDetail = catchAsyncErrors(async (request, response, next) => {
         return next(new AppError("Sorry.. That tour was not found", 404));
     }
 
+    let isBooked = false;
+    let hasReview = false;
+
+    if (request.user){
+
+        //If the user has already booked this tour, disable the link to prevent a duplicate booking
+        const booking = await Booking.findOne({ user: request.user.id, tour: tour.id });
+        isBooked = booking ? true : false;
+
+        //Only allow user to post a review if they have booked a tour (and they haven't already left a review)
+        if (tour.reviews){
+            tour.reviews.forEach(review => {
+                console.log(review);
+                if (review.user.id === request.user.id){
+                    hasReview = true;
+                }
+            });
+        }
+    }
+
     response
         .status(200)
         .render('tour', {
             title: tour.name,
-            tour: tour
+            tour: tour,
+            isBooked: isBooked,
+            hasReview: hasReview
         });
 });
 

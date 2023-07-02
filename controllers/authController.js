@@ -187,6 +187,7 @@ exports.isLoggedIn = async(request, response, next) => {
             }
 
             //Proceed to protected route
+            request.user = currentUser;
             response.locals.user = currentUser;
             return next();
         } catch (e) {

@@ -30,6 +30,7 @@ if (bookTourBtn) {
     bookTourBtn.addEventListener('click', e => {
 
         e.target.textContent = 'Processing...';
+        e.target.disabled = true;
 
         const tourId = e.target.dataset.tourId;
 

@@ -43,7 +43,7 @@ export const register = async (first_name, last_name, email, password, passwordC
 
             //11000 = Duplicate field value error
             if (typeof (result.data.message.code) !== 'undefined' && result.data.message.code === 11000) {
-                throw "This email address is already in use. Please specify another email. "
+                throw "This email address is already in use. Please specify another email. ";
             }
             //Validation errors
             else if (typeof (result.data.message.errors) !== 'undefined') {
@@ -54,9 +54,10 @@ export const register = async (first_name, last_name, email, password, passwordC
             }
         }
 
+        //Redirect to login page
         displayAlert('success', 'Account Created successfully!');
         window.setTimeout(() => {
-            location.assign('/');
+            location.assign('/login');
         }, 1500);
 
     } catch (e) {
