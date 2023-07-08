@@ -99,12 +99,6 @@ app.use(hpp({
 //Compress HTTP Responses
 app.use(compression());
 
-//Test middleware
-app.use((request, response, next) => {
-    request.requestTime = new Date().toISOString();
-    next();
-});
-
 //Define Routes
 app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);

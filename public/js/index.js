@@ -43,14 +43,14 @@ if (bookTourBtn) {
     });
 }
 
-if (lauchAddReview){
+if (lauchAddReview) {
     lauchAddReview.addEventListener('click', e => {
 
         launchReviewModal();
     });
 }
 
-if (saveReviewBtn){
+if (saveReviewBtn) {
     saveReviewBtn.addEventListener('click', e => {
 
         e.preventDefault();
@@ -60,11 +60,10 @@ if (saveReviewBtn){
         const tourId = e.target.dataset.tourId;
         const slug = e.target.dataset.tourSlug;
 
-        console.log(review, rating, tourId, slug);
         saveReview(review, rating, tourId, slug);
     });
 
-    if (closeReview){
+    if (closeReview) {
 
         closeReview.addEventListener('click', e => {
             closeReviewModal();
