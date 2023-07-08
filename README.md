@@ -18,7 +18,7 @@ allow users to view and book scenic nature tours. This application also features
 * Express Middleware security: helmet, xss-clean, express-rate-limit, express-mongo-sanitize
 
 ## Notes
-MongoDB database included in root directory for import. Login with username "test@example.com" and password "password". Alternatively, remove ".example" from the
+MongoDB database dump included in "db" directory for import. Login with username "test@example.com" and password "password". Alternatively, remove ".example" from the
  config.env.example configuration file and update the MAILER section with your custom settings to confirm your email upon registration.
 
 ## Images

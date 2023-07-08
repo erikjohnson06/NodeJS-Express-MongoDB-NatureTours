@@ -13,8 +13,8 @@
   "_id": {
     "$oid": "5c8a1dfa2f8fb814b56fa181"
   },
-  "name": "Laura Browning",
-  "email": "laura@email.com",
+  "name": "Test User",
+  "email": "test@example.com",
   "role": "user",
   "image": "user-5c8a1dfa2f8fb814b56fa181-1688239024606.jpeg",
   "active": true,
