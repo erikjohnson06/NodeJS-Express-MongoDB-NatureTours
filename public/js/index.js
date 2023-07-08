@@ -4,6 +4,7 @@ import { register } from './register';
 import { displayMap } from './mapbox';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
+import { launchReviewModal, closeReviewModal, saveReview } from './review';
 import { displayAlert } from './alerts';
 
 //MAPBOX
@@ -11,6 +12,9 @@ const mapBox = document.getElementById('map');
 
 //TOURS
 const bookTourBtn = document.getElementById('book-tour');
+const lauchAddReview = document.getElementById('launch-review-modal');
+const saveReviewBtn = document.getElementById('save-review');
+const closeReview = document.querySelector('.close');
 
 //LOGIN / LOGOUT
 const loginForm = document.querySelector('.form--login');
@@ -18,6 +22,7 @@ const logoutBtn = document.querySelector('.nav__el--logout');
 const registerForm = document.querySelector('.form--register');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
+
 const alertMessage = document.querySelector('body').dataset.alert;
 
 if (mapBox) {
@@ -38,6 +43,35 @@ if (bookTourBtn) {
     });
 }
 
+if (lauchAddReview){
+    lauchAddReview.addEventListener('click', e => {
+
+        launchReviewModal();
+    });
+}
+
+if (saveReviewBtn){
+    saveReviewBtn.addEventListener('click', e => {
+
+        e.preventDefault();
+
+        const review = document.getElementById('review_text').value;
+        const rating = document.getElementById('review_rating').value;
+        const tourId = e.target.dataset.tourId;
+        const slug = e.target.dataset.tourSlug;
+
+        console.log(review, rating, tourId, slug);
+        saveReview(review, rating, tourId, slug);
+    });
+
+    if (closeReview){
+
+        closeReview.addEventListener('click', e => {
+            closeReviewModal();
+        });
+    }
+}
+
 if (loginForm) {
 
     loginForm.addEventListener('submit', e => {
@@ -53,7 +87,6 @@ if (loginForm) {
 if (logoutBtn) {
     logoutBtn.addEventListener('click', logout);
 }
-
 
 if (registerForm) {
 

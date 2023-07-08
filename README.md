@@ -1,24 +1,28 @@
-# NodeJS-NatureTours
-Node JS + Express JS + Mongo DB application
+## Nature Tours - NodeJS Application
 
-Authentication using JSON Web Tokens (JWT)
+* Created: 2023
+* Author: Erik Johnson
 
-Development/Production mode
+This API-based and server-rendered web application is built using Node.js (v18.15.0), Express.js (v4.18) and MongoDB and Mongoose. This project is designed to
+allow users to view and book scenic nature tours. This application also features:
 
-Mongo DB Atlas or Local
+* Mongoose (Object Data Modeling library)
+* Authentication using JWT (JSON Web Tokens)
+* Axios (HTTP requests library)
+* Parcel JS (JS bundler)
+* Multer (File uploads / image processing library)
+* NodeMailer
+* PUG templating engine
+* Stripe credit card payments via API and webhooks
+* MVC design
+* Express Middleware security: helmet, xss-clean, express-rate-limit, express-mongo-sanitize
 
-NodeMailer, SendGrid
+## Notes
+MongoDB database included in root directory for import. Login with username "test@example.com" and password "password". Alternatively, remove ".example" from the
+ config.env.example configuration file and update the MAILER section with your custom settings to confirm your email upon registration.
 
-axios js
+## Images
 
-Parcel JS = JS compiler and bundler
+![ScreenShot](/public/img/screenshot1.JPG)
 
-Multer
-
-Express middleware:  (express-rate-limit, helmet, express-mongo-sanitize, )
-
-MVC design
-
-PUG templating
-
-Stripe payments via API and webhooks
+![ScreenShot](/public/img/screenshot2.JPG)

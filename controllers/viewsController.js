@@ -41,13 +41,16 @@ exports.getTourDetail = catchAsyncErrors(async (request, response, next) => {
         //Only allow user to post a review if they have booked a tour (and they haven't already left a review)
         if (tour.reviews){
             tour.reviews.forEach(review => {
-                console.log(review);
                 if (review.user.id === request.user.id){
+                    console.log(review);
                     hasReview = true;
                 }
             });
         }
     }
+
+    console.log("isBooked: ", isBooked);
+    console.log("hasReview: ", hasReview);
 
     response
         .status(200)

@@ -488,7 +488,7 @@ body {
 .overview-box__label {
     font-weight: 700;
     margin-right: 2.25rem;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     font-size: 1.4rem;
 }
 .overview-box__text {
@@ -518,7 +518,7 @@ body {
         );
     margin-top: calc(0px - var(--section-rotate));
     position: relative;
-    z-index: 1000;
+    z-index: 200;
 }
 
 .picture-box__img {
@@ -576,7 +576,7 @@ body {
     margin-top: calc(0px - var(--section-rotate));
     padding: calc(5rem + var(--section-rotate)) 0;
     position: relative;
-    z-index: 1000;
+    z-index: 200;
     background: -webkit-gradient(
         linear,
         left top,
@@ -1328,4 +1328,63 @@ body {
     box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
     -webkit-transform: translateY(-2px);
     transform: translateY(-2px);
+}
+
+/*** Modals ***/
+.modal {
+  background-color: rgba(0, 0, 0, 0.8);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: none;
+  overflow: hidden;
+  z-index: 9999
+}
+
+.modal .modal-contents {
+  width: 80%;
+  background-color: white;
+  text-align: center;
+  padding: 0px;
+  margin: 10% auto;
+  position: relative;
+  border-radius: 4px;
+
+}
+
+.modal .modal-header {
+    padding: 20px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+}
+
+.modal .modal-body {
+    padding: 20px;
+}
+
+.review-modal .modal-contents textarea {
+  margin: 15px auto;
+  display: block;
+  width: 50%;
+  padding: 8px;
+  resize: none;
+}
+
+.review-modal .modal-contents select {
+    margin: 15px auto;
+    width: 50%;
+}
+
+.close {
+  font-size: 20px;
+  color: #777;
+  float: right;
+}
+
+.close:hover,
+.close:focus {
+    color: #333;
+    cursor: pointer;
 }

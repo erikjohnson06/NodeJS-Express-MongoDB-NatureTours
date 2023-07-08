@@ -94,6 +94,10 @@ block content
                     - if (user.role === 'user')
                         - if (isBooked)
                             a.btn.btn--green.span-all-rows(href='/my-tours') You are booked for this tour!
+
+                            //- Allow review if the user has booked this tour, but has yet to leave a review.
+                            - if (!hasReview)
+                                span#launch-review-modal.btn.btn-text.span-all-rows Leave a Review
                         - else
                             button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book this tour
                     - else
@@ -101,23 +105,23 @@ block content
                 - else
                     a.btn.btn--green.span-all-rows(href='/login') Login to book this tour
 
-    //- Allow review if the user has booked this tour, but has yet to leave a review.
-    - if (user && isBooked && !hasReview)
-        section.add-review
-            div.review-form
-                h2.heading-secondary.ma-bt-lg Leave us a Review
-                form.form.review--form(data-tour-id=`${tour.id}`)
-                    div.form__group
-                        label.form__label(for='review') Review
-                        input#review.form__input(type='text', required)
-                    div.form__group
-                        label.form__label(for='rating') Rating
-                        select#rating.form__input
-                            option(value='1') 1
-                            option(value='2') 2
-                            option(value='3') 3
-                            option(value='4') 4
-                            option(value='5') 5
-                    div.form__group
-                        button.btn.btn--green Submit Review
-
+block modals
+    div.modal.review-modal
+        div.modal-contents
+            div.modal-header
+                h2 Tell Us About Your Recent Tour!
+                    div.close [X]
+            div.modal-body
+                div.form__group.ma-bt-md
+                    label.form__label(for='review_text') Review
+                    textarea#review_text.form__input(required, placeholder='Add a review about your recent tour. 500 characters max.')
+                div.form__group.ma-bt-md
+                    label.form__label(for='review_rating') Rating (1 = Lowest, 5 = Highest)
+                    select#review_rating.form__input
+                        option(value='1') 1
+                        option(value='2') 2
+                        option(value='3') 3
+                        option(value='4') 4
+                        option(value='5') 5
+                div.form__group
+                    button#save-review.btn.btn--green(data-tour-id=`${tour.id}`, data-tour-slug=`${tour.slug}`) Submit Review
